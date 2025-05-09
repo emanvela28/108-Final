@@ -89,3 +89,139 @@ li, div, span {
     outline: none;
     user-select: none;
 }
+
+/* --- Styles moved from inline HTML --- */
+
+/* For user_profile.html */
+.profile-pic-container {
+    margin-bottom: 1rem;
+}
+
+.profile-pic-display {
+    width: 150px;
+    height: 150px;
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 50%; /* Makes it a circle */
+}
+
+.profile-no-pic-message {
+    font-style: italic;
+    color: #666; /* Optional: slightly muted color for the message */
+}
+
+.profile-stats-container {
+    margin-bottom: 1.5rem;
+}
+
+.profile-stat-line {
+    margin-bottom: 0.5rem;
+}
+
+.profile-action-form { /* For follow/unfollow form and filter form */
+    margin-bottom: 1.5rem;
+}
+
+.profile-content-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.profile-content-list-item {
+    margin-bottom: 1rem;
+    padding: 0.75rem; /* Slightly increased padding */
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border: 1px solid #eee; /* Optional: subtle border */
+}
+
+/* For topic.html */
+.topic-filter-form {
+    margin-bottom: 1rem;
+}
+
+.post-tag-badge { /* Renamed from post-tag-display for clarity */
+    background-color: #eef;
+    color: #337ab7; /* Added text color for better contrast */
+    padding: 3px 8px; /* Adjusted padding */
+    border-radius: 5px;
+    font-size: 0.85em;
+    display: inline-block; /* Ensures padding and margins are respected well */
+    margin-top: 4px; /* Optional: space from title */
+}
+
+.button-link-topic { /* Specific for topic page button */
+    display: inline-block;
+    background-color: #2563eb;
+    color: white !important; /* Important to override nav link styles if they conflict */
+    padding: 0.6rem 1.2rem; /* Adjusted padding */
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s ease-in-out;
+}
+.button-link-topic:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+}
+
+/* For post.html */
+.post-image-container {
+    margin: 1.5rem 0; /* Increased margin */
+    text-align: center; /* Optional: center the image */
+}
+
+.post-image-display {
+    max-width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+    border: 1px solid #ddd; /* Optional: subtle border for the image */
+}
+
+.post-detail-tag-display { /* Specific class for tag on post detail page */
+    background-color: #eef;
+    padding: 4px 10px; /* Adjusted padding */
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #337ab7; /* Added text color */
+}
+
+.vote-form-inline {
+    display: inline;
+    margin: 0 3px; /* Slightly adjusted margin for vote buttons */
+}
+
+/* For my_profile.html */
+.my-profile-pic {
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd; /* Optional: subtle border */
+}
+
+.image-upload-preview { /* General class for JS-controlled previews */
+    margin-top: 1rem;
+    border-radius: 8px;
+    border: 1px dashed #ccc; /* Indicates it's a preview area */
+    padding: 5px; /* Optional: to show border nicely */
+    display: none; /* Default state, JS makes it visible */
+}
+
+/* For create_post.html */
+/* .image-upload-preview can be reused if max-width is handled by an inline style or a more specific class if needed */
+/* If create_post preview is always larger, use a specific class: */
+.create-post-image-preview {
+    max-width: 300px; /* Specific max-width */
+    /* inherit other .image-upload-preview styles if using cascade, or repeat them */
+    margin-top: 1rem;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    padding: 5px;
+    display: none;
+}
+
+/* General utility classes (optional, but can reduce redundancy) */
+.mb-1 { margin-bottom: 1rem; }
+.mb-1-5 { margin-bottom: 1.5rem; }
+.mt-1 { margin-top: 1rem; }

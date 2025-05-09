@@ -4,9 +4,25 @@
 {% block content %}
 <h1>{{ user.username }}'s Profile</h1>
 
-<!-- Follow/Unfollow Button -->
+<div class="profile-pic-container"> {# EDITED: Replaced inline style with class #}
+    {% if user.profile_picture %}
+        <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" alt="{{ user.username }}'s Profile Picture" class="profile-pic-display"> {# EDITED: Replaced inline style with class #}
+    {% else %}
+        <p class="profile-no-pic-message">This user has not uploaded a profile picture.</p> {# EDITED: Replaced inline style with class #}
+    {% endif %}
+</div>
+
+<div class="profile-stats-container"> {# EDITED: Replaced inline style with class #}
+    <p class="profile-stat-line"> {# EDITED: Replaced inline style with class #}
+        <strong>Followers:</strong> {{ user.followers.count() }}
+    </p>
+    <p class="profile-stat-line"> {# EDITED: Replaced inline style with class (if distinct styling for last p preferred, use another class) #}
+        <strong>Following:</strong> {{ user.following.count() }}
+    </p>
+</div>
+
 {% if current_user.is_authenticated and current_user != user %}
-    <form action="{{ url_for('main.toggle_follow', username=user.username) }}" method="post">
+    <form action="{{ url_for('main.toggle_follow', username=user.username) }}" method="post" class="profile-action-form"> {# EDITED: Replaced inline style with class #}
         {% if is_following %}
             <button type="submit">Unfollow</button>
         {% else %}
@@ -15,10 +31,9 @@
     </form>
 {% endif %}
 
-<!-- Filter Toggle -->
-<form method="get">
-    <label>Filter:</label>
-    <select name="filter" onchange="this.form.submit()">
+<form method="get" class="profile-action-form"> {# EDITED: Replaced inline style with class #}
+    <label for="user-content-filter">View:</label>
+    <select name="filter" id="user-content-filter" onchange="this.form.submit()">
         <option value="posts" {% if filter == 'posts' %}selected{% endif %}>Posts</option>
         <option value="replies" {% if filter == 'replies' %}selected{% endif %}>Replies</option>
     </select>
@@ -26,35 +41,35 @@
 
 <hr>
 
-<!-- User's Posts or Replies -->
 {% if filter == 'posts' %}
-    <h2>Posts</h2>
-    <ul>
-    {% for post in content %}
-        <li>
-            <a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a>
-            <br>
-            <small>in {{ post.topic.name }} on {{ post.timestamp.strftime('%Y-%m-%d') }}</small>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <h2>Replies</h2>
-    <ul>
-    {% for reply in content %}
-        <li>
-            <p>{{ reply.content }}</p>
-            <small>on <a href="{{ url_for('main.view_post', post_id=reply.post.id) }}">{{ reply.post.title }}</a> - {{ reply.timestamp.strftime('%Y-%m-%d') }}</small>
-        </li>
-    {% endfor %}
-    </ul>
+    <h2>Posts by {{ user.username }}</h2>
+    {% if content %}
+        <ul class="profile-content-list"> {# EDITED: Replaced inline style with class #}
+        {% for post in content %}
+            <li class="profile-content-list-item"> {# EDITED: Replaced inline style with class #}
+                <a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a>
+                <br>
+                <small>in <a href="{{ url_for('main.view_topic', slug=post.topic.slug) }}">{{ post.topic.name }}</a> on {{ post.timestamp.strftime('%Y-%m-%d') }}</small>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ user.username }} has not made any posts yet.</p>
+    {% endif %}
+{% elif filter == 'replies' %}
+    <h2>Replies by {{ user.username }}</h2>
+    {% if content %}
+        <ul class="profile-content-list"> {# EDITED: Replaced inline style with class #}
+        {% for reply in content %}
+            <li class="profile-content-list-item"> {# EDITED: Replaced inline style with class #}
+                <p>"{{ reply.content }}"</p>
+                <small>on post <a href="{{ url_for('main.view_post', post_id=reply.post.id) }}">{{ reply.post.title }}</a> - {{ reply.timestamp.strftime('%Y-%m-%d') }}</small>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ user.username }} has not made any replies yet.</p>
+    {% endif %}
 {% endif %}
+
 {% endblock %}
-
-<!-- Displaying Users' following count -->
-{% if user.profile_picture %}
-    <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" alt="Profile Picture" style="width: 150px; border-radius: 50%;">
-{% endif %}
-<p><strong>Followers:</strong> {{ user.followers_count }}</p>
-<p><strong>Following:</strong> {{ user.following_count }}</p>
-

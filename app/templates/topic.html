@@ -5,8 +5,7 @@
 <h1>{{ topic.name }}</h1>
 <p>{{ topic.description }}</p>
 
-<!-- Tag Filter Dropdown -->
-<form method="get" style="margin-bottom: 1rem;">
+<form method="get" class="topic-filter-form"> {# EDITED: Replaced inline style with class #}
     <label for="tag">Filter by tag:</label>
     <select name="tag" id="tag" onchange="this.form.submit()">
         <option value="">All</option>
@@ -16,16 +15,15 @@
     </select>
 </form>
 
-<!-- Post List -->
 {% if posts %}
-    <ul>
+    <ul class="profile-content-list"> {# EDITED: Reused class from user_profile for similar list styling #}
         {% for post in posts %}
-            <li>
+            <li class="profile-content-list-item"> {# EDITED: Reused class from user_profile for similar item styling #}
                 <a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a><br>
                 {% if post.tag %}
-                    <small style="background:#eef; padding:2px 6px; border-radius:5px;">#{{ post.tag }}</small><br>
+                    <small class="post-tag-badge">#{{ post.tag }}</small><br> {# EDITED: Replaced inline style with class #}
                 {% endif %}
-                <small>Posted by {{ post.author.username }} on {{ post.timestamp.strftime('%Y-%m-%d') }}</small>
+                <small>Posted by <a href="{{ url_for('main.user_profile', username=post.author.username) }}">{{ post.author.username }}</a> on {{ post.timestamp.strftime('%Y-%m-%d') }}</small>
             </li>
         {% endfor %}
     </ul>
@@ -33,16 +31,7 @@
     <p>No posts found for this tag.</p>
 {% endif %}
 
-<!-- New Post Button -->
-<a href="{{ url_for('main.create_post', slug=topic.slug) }}" style="
-    display: inline-block;
-    background-color: #2563eb;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    margin-top: 1rem;
-">
+<a href="{{ url_for('main.create_post', slug=topic.slug) }}" class="button-link-topic"> {# EDITED: Replaced inline style with class #}
     + Create New Post
 </a>
 {% endblock %}
