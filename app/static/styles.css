@@ -90,9 +90,6 @@ li, div, span {
     user-select: none;
 }
 
-/* --- Styles moved from inline HTML --- */
-
-/* For user_profile.html */
 .profile-pic-container {
     margin-bottom: 1rem;
 }
@@ -100,13 +97,13 @@ li, div, span {
 .profile-pic-display {
     width: 150px;
     height: 150px;
-    object-fit: cover; /* Ensures the image covers the area without distortion */
-    border-radius: 50%; /* Makes it a circle */
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .profile-no-pic-message {
     font-style: italic;
-    color: #666; /* Optional: slightly muted color for the message */
+    color: #666;
 }
 
 .profile-stats-container {
@@ -117,7 +114,7 @@ li, div, span {
     margin-bottom: 0.5rem;
 }
 
-.profile-action-form { /* For follow/unfollow form and filter form */
+.profile-action-form {
     margin-bottom: 1.5rem;
 }
 
@@ -128,32 +125,31 @@ li, div, span {
 
 .profile-content-list-item {
     margin-bottom: 1rem;
-    padding: 0.75rem; /* Slightly increased padding */
+    padding: 0.75rem;
     background-color: #f9f9f9;
     border-radius: 4px;
-    border: 1px solid #eee; /* Optional: subtle border */
+    border: 1px solid #eee;
 }
 
-/* For topic.html */
 .topic-filter-form {
     margin-bottom: 1rem;
 }
 
-.post-tag-badge { /* Renamed from post-tag-display for clarity */
+.post-tag-badge {
     background-color: #eef;
-    color: #337ab7; /* Added text color for better contrast */
-    padding: 3px 8px; /* Adjusted padding */
+    color: #337ab7;
+    padding: 3px 8px;
     border-radius: 5px;
     font-size: 0.85em;
-    display: inline-block; /* Ensures padding and margins are respected well */
-    margin-top: 4px; /* Optional: space from title */
+    display: inline-block;
+    margin-top: 4px;
 }
 
-.button-link-topic { /* Specific for topic page button */
+.button-link-topic {
     display: inline-block;
     background-color: #2563eb;
-    color: white !important; /* Important to override nav link styles if they conflict */
-    padding: 0.6rem 1.2rem; /* Adjusted padding */
+    color: white !important;
+    padding: 0.6rem 1.2rem;
     border-radius: 5px;
     text-decoration: none;
     margin-top: 1rem;
@@ -165,55 +161,40 @@ li, div, span {
     text-decoration: none;
 }
 
-/* For post.html */
 .post-image-container {
-    margin: 1.5rem 0; /* Increased margin */
-    text-align: center; /* Optional: center the image */
+    margin: 1.5rem 0;
+    text-align: center;
 }
 
 .post-image-display {
     max-width: 100%;
-    height: auto; /* Maintain aspect ratio */
+    height: auto;
     border-radius: 8px;
-    border: 1px solid #ddd; /* Optional: subtle border for the image */
+    border: 1px solid #ddd;
 }
 
-.post-detail-tag-display { /* Specific class for tag on post detail page */
+.post-detail-tag-display {
     background-color: #eef;
-    padding: 4px 10px; /* Adjusted padding */
+    padding: 4px 10px;
     border-radius: 6px;
     font-size: 0.9em;
-    color: #337ab7; /* Added text color */
+    color: #337ab7;
 }
 
 .vote-form-inline {
     display: inline;
-    margin: 0 3px; /* Slightly adjusted margin for vote buttons */
+    margin: 0 3px;
 }
 
-/* For my_profile.html */
 .my-profile-pic {
     max-width: 150px;
     height: auto;
     border-radius: 8px;
     margin-bottom: 1rem;
-    border: 1px solid #ddd; /* Optional: subtle border */
+    border: 1px solid #ddd;
 }
 
-.image-upload-preview { /* General class for JS-controlled previews */
-    margin-top: 1rem;
-    border-radius: 8px;
-    border: 1px dashed #ccc; /* Indicates it's a preview area */
-    padding: 5px; /* Optional: to show border nicely */
-    display: none; /* Default state, JS makes it visible */
-}
-
-/* For create_post.html */
-/* .image-upload-preview can be reused if max-width is handled by an inline style or a more specific class if needed */
-/* If create_post preview is always larger, use a specific class: */
-.create-post-image-preview {
-    max-width: 300px; /* Specific max-width */
-    /* inherit other .image-upload-preview styles if using cascade, or repeat them */
+.image-upload-preview {
     margin-top: 1rem;
     border-radius: 8px;
     border: 1px dashed #ccc;
@@ -221,7 +202,15 @@ li, div, span {
     display: none;
 }
 
-/* General utility classes (optional, but can reduce redundancy) */
+.create-post-image-preview {
+    max-width: 300px; /* Specific max-width */
+    margin-top: 1rem;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    padding: 5px;
+    display: none;
+}
+
 .mb-1 { margin-bottom: 1rem; }
 .mb-1-5 { margin-bottom: 1.5rem; }
 .mt-1 { margin-top: 1rem; }
