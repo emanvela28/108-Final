@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - {{ super() }}{% endblock %}
+
+{% block content %}
+{# Assuming .main-content-inner-container is defined in base.html or you use .container #}
+{# If .main-content-inner-container IS NOT the outermost div in this block from base.html, add it: #}
+{# <div class="main-content-inner-container"> #}
+
+    <h1 class="mb-2">{{ title }}</h1>
+
+    {% if posts %}
+        <div class="feed-grid">
+            {% for post in posts %}
+                <article class="content-card">
+                    {% if post.media_url %}
+                        <a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}" class="card-image-link">
+                            <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Image for {{post.title}}" class="card-image">
+                        </a>
+                    {% else %}
+                         <div class="card-no-image"></div>
+                    {% endif %}
+                    <div class="card-content">
+                        <h3><a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}">{{ post.title }}</a></h3>
+                        <p class="post-meta">
+                            By <a href="{{ url_for('main.user_profile', username=post.author.username) }}">{{ post.author.username }}</a>
+                            in <a href="{{ url_for('main.view_topic', slug=post.topic.slug) }}">{{ post.topic.name }}</a>
+                            <br>{{ post.timestamp.strftime('%b %d, %Y') }}
+                        </p>
+                        <p class="post-content-snippet">
+                            {{ post.content | striptags | truncate(100) }}
+                        </p>
+                        <div class="post-interactions">
+                            <div class="vote-controls">
+                                <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='upvote') }}" method="post" class="vote-form-inline">
+                                    <button type="submit" aria-label="Upvote">👍</button>
+                                </form>
+                                <span class="vote-score">{{ post.score }}</span>
+                                <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='downvote') }}" method="post" class="vote-form-inline">
+                                    <button type="submit" aria-label="Downvote">👎</button>
+                                </form>
+                            </div>
+                            <a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}#replies" class="view-replies-link">{{ post.replies.count() }} Replies</a>
+                        </div>
+                         {% if post.tag %}
+                            <div class="mt-1">
+                                <span class="post-tag-badge">{{ post.tag }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="flash info"> {# Using flash styling for this message #}
+            No posts have been made yet. Be the first to create one!
+        </div>
+    {% endif %}
+
+{# If .main-content-inner-container was added above, close it: #}
+{# </div> #}
+{% endblock %}

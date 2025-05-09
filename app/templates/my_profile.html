@@ -2,46 +2,52 @@
 {% block title %}{{ user.username }}'s Profile - UC Merced Forum{% endblock %}
 
 {% block content %}
-<h1>{{ user.username }}'s Profile</h1>
-
-<div class="profile-pic-container">
-    {% if user.profile_picture %}
-        <img id="current-profile-pic"
-             src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}"
-             alt="{{ user.username }}'s Profile Picture"
-             class="my-profile-pic" />
-    {% else %}
-        <p class="profile-no-pic-message">No profile picture uploaded.</p>
-    {% endif %}
-</div>
-
-<p><strong>Username:</strong> {{ user.username }}</p>
-<p><strong>Email:</strong> {{ user.email }}</p>
-
-<div class="profile-stats-container">
-    <p class="profile-stat-line"><strong>Followers:</strong> {{ user.followers.count() }}</p>
-    <p class="profile-stat-line"><strong>Following:</strong> {{ user.following.count() }}</p>
-</div>
-
-<h2 class="mt-1-5 mb-1">Update Profile Picture</h2>
-<form method="post" enctype="multipart/form-data" class="mb-1-5">
-    {{ form.hidden_tag() }}
-    <div class="form-group mb-1">
-        {{ form.profile_picture.label(class="form-label") }}<br>
-        {{ form.profile_picture(class="form-control-file", onchange="previewImage(this)") }}
-        {% if form.profile_picture.errors %}
-            <div class="invalid-feedback">
-                {% for error in form.profile_picture.errors %}
-                    <span>{{ error }}</span><br>
-                {% endfor %}
-            </div>
+<div class="profile-header mb-2">
+    <div class="profile-header-avatar">
+        {% if user.profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" alt="My Profile Picture" class="profile-pic-display">
+        {% else %}
+            <div class="profile-pic-default"><span>{{ user.username[0]|upper }}</span></div>
         {% endif %}
     </div>
-    <img id="preview" class="image-upload-preview" style="max-width: 150px;" alt="New profile picture preview" />
-    <p class="mt-1">{{ form.submit(class="btn btn-primary") }}</p>
-</form>
+    <div class="profile-header-info">
+        <h1>{{ user.username }}</h1>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <div class="profile-stats-container">
+            <p class="profile-stat-line"><strong>Followers:</strong> {{ user.followers.count() }}</p>
+            <p class="profile-stat-line"><strong>Following:</strong> {{ user.following.count() }}</p>
+        </div>
+    </div>
+</div>
 
-<a href="{{ url_for('main.user_profile', username=user.username) }}" class="button-link-topic">View Public Profile</a>
+<hr>
+
+<div class="profile-actions-forms">
+    <div class="form-section mb-2">
+        <h2>Update Profile Picture</h2>
+        <form method="post" enctype="multipart/form-data" class="profile-update-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.profile_picture.label(class="form-label") }}
+                {{ form.profile_picture(class="form-control-file", onchange="previewImage(this)") }}
+                {% if form.profile_picture.errors %}
+                    <div class="invalid-feedback" style="color: red; font-size: 0.8em;">
+                        {% for error in form.profile_picture.errors %}
+                            <span>{{ error }}</span><br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <img id="preview" class="image-upload-preview" style="max-width: 150px;" alt="New profile picture preview" />
+            <p class="mt-1">{{ form.submit(class="btn btn-primary") }}</p>
+        </form>
+    </div>
+
+    <div class="form-section">
+        <h2>View Public Profile</h2>
+        <a href="{{ url_for('main.user_profile', username=user.username) }}" class="btn btn-secondary">Go to My Public Profile</a>
+    </div>
+</div>
 
 <script>
     function previewImage(input) {

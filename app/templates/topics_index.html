@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ title }}</h1>
+
+    {% if topics %}
+        <div class="topic-list">
+            {% for topic in topics %}
+                <div class="content-card mb-1-5">
+                    <h3><a href="{{ url_for('main.view_topic', slug=topic.slug) }}">{{ topic.name }}</a></h3>
+                    <p>{{ topic.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            No topics have been created yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

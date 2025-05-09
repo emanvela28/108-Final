@@ -1,77 +1,91 @@
 {% extends 'base.html' %}
-{% block title %}{{ post.title }} - UC Merced Forum{% endblock %}
+{% block title %}{{ title }} - {{ super() }}{% endblock %}
 
 {% block content %}
-<h1>{{ post.title }}</h1>
-<p>{{ post.content }}</p>
-<p>
-    <strong>
-        by <a href="{{ url_for('main.user_profile', username=post.author.username) }}">
-            {{ post.author.username }}
-        </a>
-    </strong>
-    on {{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}
-</p>
-
-{% if post.media_url %}
-    <div class="post-image-container"> {# EDITED: Replaced inline style with class #}
-        <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Uploaded image for {{post.title}}" class="post-image-display" /> {# EDITED: Replaced inline style with class #}
+    <div class="mb-2">
+        {% if origin == 'feed' %}
+            <a href="{{ url_for('main.home_page') }}" class="btn btn-secondary btn-sm">&larr; Back to Feed</a>
+        {% else %}
+            <a href="{{ url_for('main.view_topic', slug=post.topic.slug) }}" class="btn btn-secondary btn-sm">&larr; Back to {{ post.topic.name }}</a>
+        {% endif %}
     </div>
-{% endif %}
 
-{% if post.tag %}
-    <p><strong>Tag:</strong> <span class="post-detail-tag-display">{{ post.tag }}</span></p> {# EDITED: Replaced inline style with class #}
-{% endif %}
+    <h1>{{ post.title }}</h1>
+    <p class="post-meta">
+        Posted by <a href="{{ url_for('main.user_profile', username=post.author.username) }}">{{ post.author.username }}</a>
+        in <a href="{{ url_for('main.view_topic', slug=post.topic.slug) }}">{{ post.topic.name }}</a>
+        on {{ post.timestamp.strftime('%b %d, %Y %H:%M') }}
+    </p>
 
-{% if current_user.is_authenticated %}
-    <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='upvote') }}" method="post" class="vote-form-inline"> {# EDITED: Replaced inline style with class #}
-        <button type="submit">👍</button>
-    </form>
-    <span style="font-weight: bold; margin: 0 5px;">{{ post.score }}</span> {# Keeping this simple inline style or you can make a class e.g., .vote-score #}
-    <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='downvote') }}" method="post" class="vote-form-inline"> {# EDITED: Replaced inline style with class #}
-        <button type="submit">👎</button>
-    </form>
-{% else %}
-    <p><a href="{{ url_for('main.login') }}">Log in to vote</a></p>
-{% endif %}
+    {% if post.media_url %}
+        <div class="post-image-container">
+            <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Image for {{post.title}}" class="post-image-display" />
+        </div>
+    {% endif %}
 
-<hr>
+    {% if post.tag %}
+        <p class="mb-1"><strong>Tag:</strong> <span class="post-detail-tag-display">{{ post.tag }}</span></p>
+    {% endif %}
 
-<h2>Replies</h2>
-{% if post.replies.count() > 0 %}
-    <ul class="profile-content-list"> {# EDITED: Reused class from user_profile for similar list styling #}
-        {% for reply in post.replies %}
-        <li class="profile-content-list-item"> {# EDITED: Reused class from user_profile for similar item styling #}
-            <p>{{ reply.content }}</p>
-            <p>
-                <strong>
-                    by <a href="{{ url_for('main.user_profile', username=reply.author.username) }}">
-                        {{ reply.author.username }}
-                    </a>
-                </strong>
-                on {{ reply.timestamp.strftime('%Y-%m-%d %H:%M') }}
-            </p>
-
-            {% if current_user.is_authenticated %}
-                <form action="{{ url_for('main.vote_reply', reply_id=reply.id, vote_type='upvote') }}" method="post" class="vote-form-inline"> {# EDITED: Replaced inline style with class #}
-                    <button type="submit">👍</button>
-                </form>
-                <span style="font-weight: bold; margin: 0 5px;">{{ reply.score }}</span> {# Keeping this simple inline style or make a class #}
-                <form action="{{ url_for('main.vote_reply', reply_id=reply.id, vote_type='downvote') }}" method="post" class="vote-form-inline"> {# EDITED: Replaced inline style with class #}
-                    <button type="submit">👎</button>
-                </form>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No replies yet. Be the first to reply!</p>
-{% endif %}
+    <div class="post-content-full mb-2">
+        {{ post.content | safe }} {# Or just {{ post.content }} if no HTML is intended #}
+    </div>
 
 
-{% if current_user.is_authenticated %}
-    <a href="{{ url_for('main.create_reply', post_id=post.id) }}" class="button-link-topic mt-1">Add a Reply</a> {# EDITED: Reused class and added utility margin class #}
-{% else %}
-    <p><a href="{{ url_for('main.login') }}">Login to reply</a></p>
-{% endif %}
+    {% if current_user.is_authenticated %}
+        <div class="vote-controls post-page-vote-controls">
+            <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='upvote') }}" method="post" class="vote-form-inline">
+                <button type="submit" aria-label="Upvote Post">👍</button>
+            </form>
+            <span class="vote-score">{{ post.score }}</span>
+            <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='downvote') }}" method="post" class="vote-form-inline">
+                <button type="submit" aria-label="Downvote Post">👎</button>
+            </form>
+        </div>
+    {% else %}
+        <p><a href="{{ url_for('main.login') }}">Log in to vote</a></p>
+    {% endif %}
+
+    <hr>
+
+    <h2>Replies</h2>
+    {% if post.replies.count() > 0 %}
+        <ul class="profile-content-list"> {# You might want a different class name like .reply-list #}
+            {% for reply in post.replies %}
+            <li class="profile-content-list-item" id="reply-{{ reply.id }}"> {# Added ID for anchoring #}
+                <p class="reply-author-meta post-meta"> {# Reused post-meta for similar styling #}
+                    <strong>
+                        <a href="{{ url_for('main.user_profile', username=reply.author.username) }}">
+                            {{ reply.author.username }}
+                        </a>
+                    </strong>
+                    replied on {{ reply.timestamp.strftime('%b %d, %Y %H:%M') }}
+                </p>
+                <p class="reply-content">{{ reply.content | safe }}</p> {# Or just {{ reply.content }} #}
+
+                {% if current_user.is_authenticated %}
+                    <div class="vote-controls reply-vote-controls">
+                        <form action="{{ url_for('main.vote_reply', reply_id=reply.id, vote_type='upvote') }}" method="post" class="vote-form-inline">
+                            <button type="submit" aria-label="Upvote Reply">👍</button>
+                        </form>
+                        <span class="vote-score">{{ reply.score }}</span>
+                        <form action="{{ url_for('main.vote_reply', reply_id=reply.id, vote_type='downvote') }}" method="post" class="vote-form-inline">
+                            <button type="submit" aria-label="Downvote Reply">👎</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No replies yet. Be the first to reply!</p>
+    {% endif %}
+
+    <hr class="mt-1-5 mb-1-5">
+
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('main.create_reply', post_id=post.id) }}" class="btn btn-primary">Add a Reply</a>
+    {% else %}
+        <p><a href="{{ url_for('main.login') }}">Login to reply</a></p>
+    {% endif %}
 {% endblock %}
