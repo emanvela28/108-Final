@@ -28,7 +28,7 @@
     {% endif %}
 
     <div class="post-content-full mb-2">
-        {{ post.content | safe }} {# Or just {{ post.content }} if no HTML is intended #}
+        {{ post.content | safe }}
     </div>
 
 
@@ -50,10 +50,10 @@
 
     <h2>Replies</h2>
     {% if post.replies.count() > 0 %}
-        <ul class="profile-content-list"> {# You might want a different class name like .reply-list #}
+        <ul class="profile-content-list">
             {% for reply in post.replies %}
-            <li class="profile-content-list-item" id="reply-{{ reply.id }}"> {# Added ID for anchoring #}
-                <p class="reply-author-meta post-meta"> {# Reused post-meta for similar styling #}
+            <li class="profile-content-list-item" id="reply-{{ reply.id }}">
+                <p class="reply-author-meta post-meta">
                     <strong>
                         <a href="{{ url_for('main.user_profile', username=reply.author.username) }}">
                             {{ reply.author.username }}
@@ -61,7 +61,7 @@
                     </strong>
                     replied on {{ reply.timestamp.strftime('%b %d, %Y %H:%M') }}
                 </p>
-                <p class="reply-content">{{ reply.content | safe }}</p> {# Or just {{ reply.content }} #}
+                <p class="reply-content">{{ reply.content | safe }}</p>
 
                 {% if current_user.is_authenticated %}
                     <div class="vote-controls reply-vote-controls">

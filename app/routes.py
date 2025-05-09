@@ -70,7 +70,6 @@ def my_profile():
     form = ProfileUpdateForm()
     if form.validate_on_submit() and form.profile_picture.data:
         filename = secure_filename(f"{uuid.uuid4()}_{form.profile_picture.data.filename}")
-        # Ensure UPLOAD_FOLDER is correctly configured in app init and accessible
         upload_path = os.path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
         form.profile_picture.data.save(upload_path)
         current_user.profile_picture = filename
@@ -146,7 +145,7 @@ def view_topic(slug):
     topic = Topic.query.filter_by(slug=slug).first_or_404()
     selected_tag = request.args.get('tag')
 
-    query = topic.posts  # Start with topic.posts relationship (lazy='dynamic')
+    query = topic.posts
     if selected_tag:
         posts = query.filter_by(tag=selected_tag).order_by(Post.timestamp.desc()).all()
     else:
@@ -170,9 +169,9 @@ def view_topic(slug):
 @login_required
 def view_post(post_id):
     post = Post.query.get_or_404(post_id)
-    origin = request.args.get('origin', None)  # EDITED: Get the 'origin' query parameter
-    page_title = post.title  # EDITED: Set the title for the template
-    return render_template('post.html', post=post, title=page_title, origin=origin)  # EDITED: Pass title and origin
+    origin = request.args.get('origin', None)
+    page_title = post.title
+    return render_template('post.html', post=post, title=page_title, origin=origin)
 
 
 @main.route('/topic/<slug>/new', methods=['GET', 'POST'])
@@ -185,12 +184,11 @@ def create_post(slug):
         "roommate-realities-advice-support": ["Advice", "Issues", "Good Roommates", "Bad Roommates", "Help"],
         "swap-shop-secondhand-treasures": ["Buy", "Sell", "Swap", "Furniture", "Textbooks"],
         "student-life-local-hotspots": ["Food", "Events", "Housing", "Things to Do", "Advice"]
-        # Assuming you renamed the topic
     }
     form = PostForm()
     # Dynamically set choices for the tag field based on the current topic's slug
     form.tag.choices = [(tag, tag) for tag in
-                        TAG_OPTIONS.get(slug, ["General"])]  # Default to "General" if slug not in TAG_OPTIONS
+                        TAG_OPTIONS.get(slug, ["General"])]
     if not form.tag.choices:  # Ensure there's always at least one choice
         form.tag.choices = [("General", "General")]
 
@@ -198,7 +196,7 @@ def create_post(slug):
         filename = None
         if form.image.data:
             file_ext = os.path.splitext(form.image.data.filename)[1].lower()
-            if file_ext not in ['.jpg', '.jpeg', '.png', '.gif']:  # Basic validation
+            if file_ext not in ['.jpg', '.jpeg', '.png', '.gif']:
                 flash('Invalid image type. Allowed: jpg, jpeg, png, gif', 'danger')
                 return render_template('create_post.html', title=f'New Post in {topic.name}', form=form, topic=topic)
 

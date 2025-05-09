@@ -2,10 +2,6 @@
 {% block title %}{{ title }} - {{ super() }}{% endblock %}
 
 {% block content %}
-{# Assuming .main-content-inner-container is defined in base.html or you use .container #}
-{# If .main-content-inner-container IS NOT the outermost div in this block from base.html, add it: #}
-{# <div class="main-content-inner-container"> #}
-
     <h1 class="mb-2">{{ title }}</h1>
 
     {% if posts %}
@@ -55,7 +51,4 @@
             No posts have been made yet. Be the first to create one!
         </div>
     {% endif %}
-
-{# If .main-content-inner-container was added above, close it: #}
-{# </div> #}
 {% endblock %}

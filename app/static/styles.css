@@ -644,23 +644,18 @@ label {
         width: 100%;
     }
     body.sidebar-collapsed .main-content {
-        margin-left: var(--sidebar-width); /* Push content when sidebar is forced open on mobile by JS */
+        margin-left: var(--sidebar-width); 
     }
 
     .sidebar-toggle-btn {
-        display: flex; /* Ensure it's visible on mobile */
-        left: 15px; /* Always visible on left */
+        display: flex;
+        left: 15px;
     }
     body:not(.sidebar-collapsed) .sidebar-toggle-btn {
-         /* Adjust if needed when sidebar is open on mobile (if it overlaps) */
-         /* This example assumes JS will handle the 'sidebar-collapsed' on body for mobile too */
     }
-    body.sidebar-collapsed .main-content { /* Re-evaluate for mobile */
+    body.sidebar-collapsed .main-content {
         margin-left: 0;
     }
-    /* Keep the sidebar width and allow it to be toggled by JS on mobile too */
-    /* The previous @media query which turned sidebar into a top bar is removed */
-    /* This setup makes the JS toggle primary for all screen sizes */
 
     .main-content-inner-container {
         padding: 1.5rem 1rem;
