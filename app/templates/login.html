@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Login | ACME University{% endblock %}
+
+{% block content %}
+<div class="login-box">
+    <h2>ACME University Login</h2>
+    <form method="POST" action="{{ url_for('main.login') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(class="form-control", size=32) }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="form-control", size=32) }}
+        </div>
+        {{ form.submit(class="btn btn-primary btn-block") }}
+    </form>
+    </div>
+{% endblock %}

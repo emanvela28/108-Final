@@ -1,0 +1,33 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2>Welcome to the Admin Dashboard 👋</h2>
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h5 class="card-title">Total Users</h5>
+          <p class="card-text display-6">{{ user_count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-success">
+        <div class="card-body">
+          <h5 class="card-title">Total Topics</h5>
+          <p class="card-text display-6">{{ topic_count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-info">
+        <div class="card-body">
+          <h5 class="card-title">Total Posts</h5>
+          <p class="card-text display-6">{{ post_count }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

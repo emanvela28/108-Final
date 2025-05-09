@@ -1,0 +1,13 @@
+* Users can post questions on topics (implemented) 
+• Users can filter questions on topics
+• Users can answer questions (implemented)
+• Users can upvote and downvote answers (implemented) 
+• Pick a theme for your forum
+* Users should be able to upload an image if they would like. (implemented)
+* Users can filter by tags on a topic page (implemented)
+* Users should be able to select a tag for their topic when making a new post. (implemented)
+* Users should be able to click a user profile and see their posts and their comments. This should be filtered, sort by posts or 
+  sort by comments (implemented)
+* user should be able to follow another user. (implemented)
+* User should be able to click on their own page and view their data (implemented)
+* User should be able to select a profile photo (implemented)

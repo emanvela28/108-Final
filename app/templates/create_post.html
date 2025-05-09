@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Create Post - UC Merced Forum{% endblock %}
+
+{% block content %}
+<h1>Create a New Post in {{ topic.name }}</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <p>
+    {{ form.tag.label }}<br>
+    {{ form.tag() }}
+    </p>
+
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(size=80) }}
+    </p>
+
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(rows=10, cols=80) }}
+    </p>
+
+    <p>
+        {{ form.image.label }}<br>
+        {{ form.image(onchange="previewImage(this)") }}
+    </p>
+
+    <img id="preview" style="max-width: 300px; display: none;" />
+
+    <script>
+    function previewImage(input) {
+        const preview = document.getElementById('preview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
+
+    <p><input type="submit" value="Submit"></p>
+</form>
+{% endblock %}

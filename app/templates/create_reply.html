@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Reply to Post - UC Merced Forum{% endblock %}
+{% block content %}
+<h1>Reply to: {{ post.title }}</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(rows=5, cols=80) }}
+    </p>
+    <p><input type="submit" value="Submit Reply"></p>
+</form>
+{% endblock %}

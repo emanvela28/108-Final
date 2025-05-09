@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} - UC Merced Forum{% endblock %}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<p>
+    <strong>
+        by <a href="{{ url_for('main.user_profile', username=post.author.username) }}">
+            {{ post.author.username }}
+        </a>
+    </strong>
+    on {{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}
+</p>
+
+{% if post.media_url %}
+    <div style="margin: 1rem 0;">
+        <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Uploaded image" style="max-width: 100%; border-radius: 8px;" />
+    </div>
+{% endif %}
+
+{% if post.tag %}
+    <p><strong>Tag:</strong> <span style="background-color: #eef; padding: 4px 8px; border-radius: 6px;">{{ post.tag }}</span></p>
+{% endif %}
+
+<!-- Post Voting -->
+{% if current_user.is_authenticated %}
+    <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='upvote') }}" method="post" style="display:inline;">
+        <button type="submit">👍</button>
+    </form>
+    <span style="font-weight: bold;">{{ post.score }}</span>
+    <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='downvote') }}" method="post" style="display:inline;">
+        <button type="submit">👎</button>
+    </form>
+{% else %}
+    <p><a href="{{ url_for('main.login') }}">Log in to vote</a></p>
+{% endif %}
+
+<hr>
+
+<!-- Replies Section -->
+<h2>Replies</h2>
+<ul>
+    {% for reply in post.replies %}
+    <li>
+        <p>{{ reply.content }}</p>
+        <p>
+            <strong>
+                by <a href="{{ url_for('main.user_profile', username=reply.author.username) }}">
+                    {{ reply.author.username }}
+                </a>
+            </strong>
+            on {{ reply.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </p>
+
+        {% if current_user.is_authenticated %}
+            <form action="{{ url_for('main.vote_reply', reply_id=reply.id, vote_type='upvote') }}" method="post" style="display:inline;">
+                <button type="submit">👍</button>
+            </form>
+            <span style="font-weight: bold;">{{ reply.score }}</span>
+            <form action="{{ url_for('main.vote_reply', reply_id=reply.id, vote_type='downvote') }}" method="post" style="display:inline;">
+                <button type="submit">👎</button>
+            </form>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Reply Form Button -->
+{% if current_user.is_authenticated %}
+    <a href="{{ url_for('main.create_reply', post_id=post.id) }}">Add a Reply</a>
+{% else %}
+    <p><a href="{{ url_for('main.login') }}">Login to reply</a></p>
+{% endif %}
+{% endblock %}

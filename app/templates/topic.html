@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ topic.name }} - UC Merced Forum{% endblock %}
+
+{% block content %}
+<h1>{{ topic.name }}</h1>
+<p>{{ topic.description }}</p>
+
+<!-- Tag Filter Dropdown -->
+<form method="get" style="margin-bottom: 1rem;">
+    <label for="tag">Filter by tag:</label>
+    <select name="tag" id="tag" onchange="this.form.submit()">
+        <option value="">All</option>
+        {% for tag in all_tags %}
+            <option value="{{ tag }}" {% if tag == selected_tag %}selected{% endif %}>{{ tag }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+<!-- Post List -->
+{% if posts %}
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a><br>
+                {% if post.tag %}
+                    <small style="background:#eef; padding:2px 6px; border-radius:5px;">#{{ post.tag }}</small><br>
+                {% endif %}
+                <small>Posted by {{ post.author.username }} on {{ post.timestamp.strftime('%Y-%m-%d') }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No posts found for this tag.</p>
+{% endif %}
+
+<!-- New Post Button -->
+<a href="{{ url_for('main.create_post', slug=topic.slug) }}" style="
+    display: inline-block;
+    background-color: #2563eb;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 1rem;
+">
+    + Create New Post
+</a>
+{% endblock %}
