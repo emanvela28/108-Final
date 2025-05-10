@@ -901,3 +901,22 @@ body.dark-mode .profile-pic-default {
     border-radius: 50%;
 }
 
+.custom-file-upload {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-secondary);
+    background-color: transparent;
+    border: 1px solid var(--accent-secondary);
+    border-radius: var(--border-radius-medium);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: var(--accent-secondary);
+    color: var(--background-card);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+}

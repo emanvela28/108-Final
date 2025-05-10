@@ -10,6 +10,8 @@
 * user should be able to follow another user. (implemented)
 * User should be able to click on their own page and view their data (implemented)
 * User should be able to select a profile photo (implemented)
+* Notification page if someone comments or likes (implemented)
+* Deploy site (implemented)
 
 * Add a method to create / delete forum topics
 * Theme --> student dorm/house themed? Share room designs, ask for help/opinions, etc.
@@ -25,6 +27,3 @@
 * Edit posts
 * Search for posts / users
 * Tagging users in posts or comments
-* Notification page if someone comments or likes
-
-* Deploy site

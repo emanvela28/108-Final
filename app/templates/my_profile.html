@@ -29,7 +29,11 @@
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.profile_picture.label(class="form-label") }}
-                {{ form.profile_picture(class="form-control-file", onchange="previewImage(this)") }}
+                <label for="profilePictureInput" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i> Choose File
+                </label>
+                {{ form.profile_picture(class="form-control-file", id="profilePictureInput", style="display: none;", onchange="previewImage(this)") }}
+                
                 {% if form.profile_picture.errors %}
                     <div class="invalid-feedback" style="color: red; font-size: 0.8em;">
                         {% for error in form.profile_picture.errors %}

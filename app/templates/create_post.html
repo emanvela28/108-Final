@@ -4,47 +4,57 @@
 {% block content %}
 <h1>Create a New Post in {{ topic.name }}</h1>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" class="post-create-form">
     {{ form.hidden_tag() }}
 
-    <p>
-    {{ form.tag.label }}<br>
-    {{ form.tag() }}
-    </p>
+    <div class="form-group">
+        {{ form.tag.label(class="form-label") }}
+        {{ form.tag(class="form-control") }}
+    </div>
 
-    <p>
-        {{ form.title.label }}<br>
-        {{ form.title(size=80) }}
-    </p>
+    <div class="form-group">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control") }}
+    </div>
 
-    <p>
-        {{ form.content.label }}<br>
-        {{ form.content(rows=10, cols=80) }}
-    </p>
+    <div class="form-group">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control") }}
+    </div>
 
-    <p>
-        {{ form.image.label }}<br>
-        {{ form.image(onchange="previewImage(this)") }}
-    </p>
+    <div class="form-group">
+        {{ form.image.label(class="form-label") }}
+        <label for="postImageInput" class="custom-file-upload">
+            <i class="fa fa-image"></i> Choose Image
+        </label>
+        {{ form.image(id="postImageInput", style="display: none;", onchange="previewImage(this)") }}
+        <p id="file-name-display" class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;"></p>
+    </div>
 
-    <img id="preview" class="create-post-image-preview" alt="New post image preview" /> {# EDITED: Replaced inline style with class, JS will control display #}
+    <img id="preview" class="create-post-image-preview" alt="New post image preview" />
 
-    <script>
+    <div class="form-group mt-1">
+        <button type="submit" class="btn btn-primary">Submit Post</button>
+    </div>
+</form>
+
+<script>
     function previewImage(input) {
         const preview = document.getElementById('preview');
+        const fileNameDisplay = document.getElementById('file-name-display');
+
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 preview.src = e.target.result;
-                preview.style.display = 'block'; // This will make it visible
+                preview.style.display = 'block';
             };
+            fileNameDisplay.textContent = "Selected file: " + input.files[0].name;
             reader.readAsDataURL(input.files[0]);
         } else {
-            preview.style.display = 'none'; // Hide if no file selected
+            preview.style.display = 'none';
+            fileNameDisplay.textContent = "";
         }
     }
-    </script>
-
-    <p><input type="submit" value="Submit"></p>
-</form>
+</script>
 {% endblock %}
