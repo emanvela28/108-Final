@@ -14,6 +14,16 @@
         <span></span>
         <span></span>
     </button>
+        {% if current_user.is_authenticated %}
+        <div class="notification-bell-wrapper">
+            <a href="{{ url_for('main.notifications') }}" class="notification-bell">
+                🔔
+                {% if unread_notifications_count > 0 %}
+                    <span class="notification-count">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>            
+        </div>
+        {% endif %}
 
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -27,7 +37,7 @@
                 <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('main.login') }}" class="{{ 'active' if request.endpoint == 'main.login' else '' }}">Login</a></li>
-                <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">Register</a></li>
+                <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">Register</a></li>    
             {% endif %}
         </ul>
     </aside>

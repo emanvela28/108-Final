@@ -683,3 +683,77 @@ label {
     font-weight: 600;
     border-left-color: var(--accent-primary); /* This was already in your sidebar styles */
 }
+
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+.notification-item {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius-medium);
+    background-color: var(--background-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+    transition: background-color 0.3s ease;
+}
+
+.notification-item.unread {
+    background-color: #fef9e7; /* light yellow */
+    transition: background-color 0.5s ease-in-out;
+}
+
+.notification-item.unread-temp {
+    background-color: #e8f0fe;
+    transition: background-color 0.5s ease;
+}
+.notification-item.read {
+    background-color: white;
+}
+
+.notification-message a {
+    color: var(--accent-primary);
+    font-weight: 500;
+    text-decoration: none;
+}
+.notification-message a:hover {
+    text-decoration: underline;
+}
+
+.notification-timestamp {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.notification-bell-wrapper {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    z-index: 1005;
+}
+
+.notification-bell {
+    font-size: 1.4rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    position: relative;
+}
+
+.notification-bell:hover {
+    color: var(--accent-primary);
+}
+
+.notification-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
