@@ -27,3 +27,9 @@
 * Edit posts
 * Search for posts / users
 * Tagging users in posts or comments
+
+
+// BUGS
+* When liking your own post the server crashes
+* Dark mode flashes white when switching a screen
+  * Text is kind of hard to see on dark mode (submit boxes and notifications specifically) 
