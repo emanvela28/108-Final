@@ -89,10 +89,6 @@ body:not(.sidebar-collapsed) .sidebar-toggle-btn {
 
 body.sidebar-collapsed .sidebar {
     transform: translateX(calc(-1 * var(--sidebar-width)));
-    /* Alternatively, for icon-only sidebar:
-    width: 60px;
-    overflow: hidden; */
-    /* Then adjust .sidebar-nav li a to show only icons and hide text */
 }
 
 
@@ -633,18 +629,12 @@ label {
 .mt-1-5 { margin-top: 1.5rem !important; }
 
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(calc(-1 * var(--sidebar-width)));
-    }
-    body.sidebar-collapsed .sidebar {
-        transform: translateX(0);
-    }
     .main-content {
         margin-left: 0;
         width: 100%;
     }
     body.sidebar-collapsed .main-content {
-        margin-left: var(--sidebar-width); 
+        margin-left: var(--sidebar-width);
     }
 
     .sidebar-toggle-btn {
@@ -660,6 +650,7 @@ label {
     .main-content-inner-container {
         padding: 1.5rem 1rem;
     }
+
     .feed-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -685,4 +676,10 @@ label {
         margin-right: 0;
         margin-bottom: 0.5rem;
     }
+}
+.sidebar-nav li a.active {
+    background-color: #e9ecef; /* Or var(--border-color) or a light accent */
+    color: var(--accent-primary);
+    font-weight: 600;
+    border-left-color: var(--accent-primary); /* This was already in your sidebar styles */
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}UC Merced Forum{% endblock %}</title>
+    <title>{% block title %}ForumFeed{% endblock %} - Forum</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -17,17 +17,17 @@
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            <a href="{{ url_for('main.home_page') }}" class="sidebar-brand">Forum</a>
+            <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand">ForumFeed</a>
         </div>
         <ul class="sidebar-nav">
-            <li><a href="{{ url_for('main.home_page') }}">Home (Feed)</a></li>
-            <li><a href="{{ url_for('main.topics_index') }}">Topics</a></li>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('main.my_profile') }}">My Profile</a></li>
+                <li><a href="{{ url_for('main.home_page') }}" class="{{ 'active' if request.endpoint == 'main.home_page' else '' }}">Home (Feed)</a></li>
+                <li><a href="{{ url_for('main.topics_index') }}" class="{{ 'active' if request.endpoint == 'main.topics_index' or (topic and request.endpoint == 'main.view_topic') else '' }}">Topics</a></li>
+                <li><a href="{{ url_for('main.my_profile') }}" class="{{ 'active' if request.endpoint == 'main.my_profile' or (user and user == current_user and request.endpoint == 'main.user_profile') else '' }}">My Profile</a></li>
                 <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('main.login') }}">Login</a></li>
-                <li><a href="{{ url_for('main.register') }}">Register</a></li>
+                <li><a href="{{ url_for('main.login') }}" class="{{ 'active' if request.endpoint == 'main.login' else '' }}">Login</a></li>
+                <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">Register</a></li>
             {% endif %}
         </ul>
     </aside>
@@ -51,28 +51,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
             const body = document.body;
-            const sidebar = document.querySelector('.sidebar');
 
-            function toggleSidebar() {
-                body.classList.toggle('sidebar-collapsed');
-                // Store preference in localStorage
-                if (body.classList.contains('sidebar-collapsed')) {
-                    localStorage.setItem('sidebarState', 'collapsed');
+            function applySidebarStateFromStorage() {
+
+                if (localStorage.getItem('sidebarState') === 'collapsed') {
+                    body.classList.add('sidebar-collapsed');
                 } else {
-                    localStorage.setItem('sidebarState', 'expanded');
+                    body.classList.remove('sidebar-collapsed');
                 }
             }
 
             if (sidebarToggleBtn) {
-                sidebarToggleBtn.addEventListener('click', toggleSidebar);
+                sidebarToggleBtn.addEventListener('click', function() {
+                    body.classList.toggle('sidebar-collapsed');
+                    if (body.classList.contains('sidebar-collapsed')) {
+                        localStorage.setItem('sidebarState', 'collapsed');
+                    } else {
+                        localStorage.setItem('sidebarState', 'expanded');
+                    }
+                });
             }
 
-            if (window.innerWidth > 768 && localStorage.getItem('sidebarState') === 'collapsed') {
-                body.classList.add('sidebar-collapsed');
-            }
+            applySidebarStateFromStorage();
         });
     </script>
-
-
 </body>
 </html>

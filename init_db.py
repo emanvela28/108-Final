@@ -33,9 +33,9 @@ with app.app_context():
          "description": "Tips for maximizing space, storage solutions, and tech setups."},
         {"name": "Roommate Realities: Advice & Support",
          "description": "Discuss roommate agreements, conflict resolution, and finding compatible housemates."},
-        {"name": "Swap Shop & Secondhand Treasures",
+        {"name": "Swap Shop & Second-hand Treasures",
          "description": "Buy, sell, or swap furniture, decor, textbooks, and other items."},
-        {"name": "Campus Life & Local Finds (Merced)",
+        {"name": "Campus Life & Local Finds",
          "description": "General chat about student life, events, and cool spots around Merced specific to dorm/apartment living."}
     ]
 
