@@ -16,8 +16,15 @@
   ---> Site name needs to be chosen
   ---> ISSUE: Dark mode causes page flash on reload or changing pages
 
+/// Potential features ///
 * Admin side to remove other people's comments/posts when necessary
 * Add a button to share as link for posts?
 * Add option to sort homepage posts by most recent or most popular
   ---> Adjust title accordingly
+* Paginate / tab bar for posts in topic sections (home page can be infinite like Instagram)
+* Edit posts
+* Search for posts / users
+* Tagging users in posts or comments
+* Notification page if someone comments or likes
+
 * Deploy site
