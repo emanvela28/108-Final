@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
-from .models import User, Topic, Post, Reply, Vote, Follow
+from .models import User, Topic, Post, Reply, Vote, Follow, Notification
 from .forms import LoginForm, RegisterForm, PostForm, ReplyForm, ProfileUpdateForm
 from . import db, login_manager, bcrypt
 from werkzeug.utils import secure_filename
@@ -118,7 +118,16 @@ def toggle_follow(username):
         else:
             follow = Follow(user_id=user_to_follow.id, follower_id=current_user.id)
             db.session.add(follow)
+
+            # ✅ Add a notification when followed
+            notification = Notification(
+                user_id=user_to_follow.id,
+                message=f"{current_user.username} started following you."
+            )
+            db.session.add(notification)
+
             flash(f'You are now following {user_to_follow.username}!', 'success')
+
         db.session.commit()
     return redirect(url_for('main.user_profile', username=username))
 
@@ -227,12 +236,22 @@ def create_reply(post_id):
     if form.validate_on_submit():
         reply = Reply(content=form.content.data, author=current_user, post=post)
         db.session.add(reply)
+
+        # ✅ Add this notification logic
+        if post.author != current_user:
+            from app.models import Notification  # make sure this import is valid
+            notification = Notification(
+                user_id=post.author.id,
+                message=f"{current_user.username} replied to your post: '{post.title}'",
+                is_read=False
+            )
+            db.session.add(notification)
+
         db.session.commit()
         flash('Reply posted!', 'success')
-        return redirect(url_for('main.view_post', post_id=post.id,
-                                _anchor='reply-' + str(reply.id)))  # Redirect to the post, anchor to new reply
-    return render_template('create_reply.html', title=f'Reply to "{post.title}"', form=form, post=post)
-
+        return redirect(url_for('main.view_post', post_id=post.id, _anchor='reply-' + str(reply.id)))
+    
+    return render_template('create_reply.html', title=f"Reply to '{post.title}'", form=form, post=post)
 
 # ------------------------------ VOTING ------------------------------
 @main.route('/vote/post/<int:post_id>/<vote_type>', methods=['POST'])
@@ -255,6 +274,13 @@ def vote_post(post_id, vote_type):
     else:  # New vote
         new_vote = Vote(user_id=current_user.id, post_id=post.id, vote_type=vote_type)
         db.session.add(new_vote)
+        if vote_type == 'upvote' and post.author and post.author != current_user:
+            notification = Notification(
+            user_id=post.author.id,
+            message=f"{current_user.username} upvoted your post: '{post.title}'"
+        )
+        db.session.add(notification)
+
         flash(f'You {vote_type}d the post.', 'success')
 
     db.session.commit()
@@ -281,8 +307,42 @@ def vote_reply(reply_id, vote_type):
     else:
         new_vote = Vote(user_id=current_user.id, reply_id=reply.id, vote_type=vote_type)
         db.session.add(new_vote)
+
+        if vote_type == 'upvote' and reply.author and reply.author != current_user:
+            notification = Notification(
+                user_id=reply.author.id,
+                message=f"{current_user.username} upvoted your reply on: '{reply.post.title}'"
+            )
+            db.session.add(notification)
+
         flash(f'You {vote_type}d the reply.', 'success')
+
 
     db.session.commit()
     # Redirect back to the post page, possibly to the specific reply's anchor
     return redirect(url_for('main.view_post', post_id=reply.post_id, _anchor='reply-' + str(reply.id)))
+
+@main.route('/notifications')
+@login_required
+def notifications():
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).all()
+
+    # Store IDs of notifications that were unread before updating
+    unread_ids = [n.id for n in notifications if not n.is_read]
+
+    # Mark all as read
+    for n in notifications:
+        if not n.is_read:
+            n.is_read = True
+    db.session.commit()
+
+    return render_template('notifications.html', notifications=notifications, unread_ids=unread_ids, title="Your Notifications")
+
+
+@main.app_context_processor
+def inject_notification_count():
+    if current_user.is_authenticated:
+        count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+        return dict(unread_notifications_count=count)
+    return dict(unread_notifications_count=0)
+

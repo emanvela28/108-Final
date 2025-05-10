@@ -93,7 +93,7 @@ def create_app():
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
-    from .models import User, Topic, Post, Reply, Vote
+    from .models import User, Topic, Post, Reply, Vote, Notification
     from .routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
 

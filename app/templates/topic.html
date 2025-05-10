@@ -5,8 +5,12 @@
     <div class="mb-2">
         <a href="{{ url_for('main.topics_index') }}" class="btn btn-secondary btn-sm">&larr; Back to All Topics</a>
     </div>
-<h1>{{ topic.name }}</h1>
+<div class="d-flex justify-between align-center mb-1-5">
+    <h1 class="mb-0">{{ topic.name }}</h1>
+    <a href="{{ url_for('main.create_post', slug=topic.slug) }}" class="btn btn-primary">+ Create New Post</a>
+</div>
 <p>{{ topic.description }}</p>
+
 
 <form method="get" class="topic-filter-form">
     <label for="tag">Filter by tag:</label>
@@ -34,7 +38,8 @@
     <p>No posts found for this tag.</p>
 {% endif %}
 
-<a href="{{ url_for('main.create_post', slug=topic.slug) }}" class="button-link-topic">
-    + Create New Post
-</a>
+<div class="mt-2">
+    <a href="{{ url_for('main.create_post', slug=topic.slug) }}" class="btn btn-primary">+ Create New Post</a>
+</div>
+
 {% endblock %}

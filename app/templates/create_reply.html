@@ -1,13 +1,36 @@
 {% extends 'base.html' %}
 {% block title %}Reply to Post - UC Merced Forum{% endblock %}
+
 {% block content %}
-<h1>Reply to: {{ post.title }}</h1>
-<form method="post">
+<h1 class="mb-1-5">Reply to Post</h1>
+
+<!-- Original Post Preview -->
+<div class="content-card mb-2">
+    <div class="card-content">
+        <h3><a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <div class="post-meta">
+            Posted by {{ post.author.username }} • {{ post.timestamp.strftime('%b %d, %Y at %I:%M %p') }}
+        </div>
+        <p class="post-content-snippet">{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+    </div>
+</div>
+
+<!-- Reply Form -->
+<form method="post" class="reply-form">
     {{ form.hidden_tag() }}
-    <p>
-        {{ form.content.label }}<br>
-        {{ form.content(rows=5, cols=80) }}
-    </p>
-    <p><input type="submit" value="Submit Reply"></p>
+
+    <div class="form-group">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control", rows=5) }}
+    </div>
+
+    <div class="form-group mt-1">
+        <button type="submit" class="btn btn-primary">Submit Reply</button>
+    </div>
 </form>
+
+<a href="{{ request.referrer or url_for('main.view_post', post_id=post.id) }}" class="btn btn-secondary mb-1">
+    ← Back to Post
+</a>
+
 {% endblock %}

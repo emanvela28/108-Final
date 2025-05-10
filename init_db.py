@@ -11,9 +11,9 @@ def slugify(text):
     return text.strip('-')
 
 with app.app_context():
-    from app.models import User, Topic, Post, Reply, Vote
+    from app.models import User, Topic, Post, Reply, Vote, Notification
 
-    db.drop_all()
+    # db.drop_all()
     db.create_all()
 
     #hashed test users
@@ -42,9 +42,15 @@ with app.app_context():
     created_topics = []
     for topic_data in topics_data:
         slug = slugify(topic_data["name"])
+        
+        # ✅ Check if topic already exists
+        existing = Topic.query.filter_by(slug=slug).first()
+        if existing:
+            print(f"Topic already exists: {slug}, skipping...")
+            continue  # skip to the next topic
+
         topic = Topic(name=topic_data["name"], description=topic_data['description'], slug=slug)
         db.session.add(topic)
-        created_topics.append(topic)
     db.session.commit()
     print(f"{len(created_topics)} topics created")
 

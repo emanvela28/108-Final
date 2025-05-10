@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ForumFeed{% endblock %} - Forum</title>
+    <title>{% block title %}Forum{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -14,22 +14,38 @@
         <span></span>
         <span></span>
     </button>
+        {% if current_user.is_authenticated %}
+        <div class="notification-bell-wrapper">
+            <a href="{{ url_for('main.notifications') }}" class="notification-bell">
+                🔔
+                {% if unread_notifications_count > 0 %}
+                    <span class="notification-count">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>            
+        </div>
+        {% endif %}
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand">ForumFeed</a>
+
+            {#NEED TO PICK A NAME#}
+            <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand">Forum</a>
+            {#NEED TO PICK A NAME#}
         </div>
         <ul class="sidebar-nav">
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('main.home_page') }}" class="{{ 'active' if request.endpoint == 'main.home_page' else '' }}">Home (Feed)</a></li>
+                <li><a href="{{ url_for('main.home_page') }}" class="{{ 'active' if request.endpoint == 'main.home_page' else '' }}">Home</a></li>
                 <li><a href="{{ url_for('main.topics_index') }}" class="{{ 'active' if request.endpoint == 'main.topics_index' or (topic and request.endpoint == 'main.view_topic') else '' }}">Topics</a></li>
                 <li><a href="{{ url_for('main.my_profile') }}" class="{{ 'active' if request.endpoint == 'main.my_profile' or (user and user == current_user and request.endpoint == 'main.user_profile') else '' }}">My Profile</a></li>
                 <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('main.login') }}" class="{{ 'active' if request.endpoint == 'main.login' else '' }}">Login</a></li>
-                <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">Register</a></li>
+                <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">Register</a></li>    
             {% endif %}
         </ul>
+        <div class="sidebar-footer">
+            <button id="darkModeToggleBtn" class="dark-mode-toggle-btn">Toggle Dark Mode</button>
+        </div>
     </aside>
 
     <main class="main-content">
@@ -50,10 +66,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+            const darkModeToggleBtn = document.getElementById('darkModeToggleBtn');
             const body = document.body;
 
+            // --- Sidebar Toggle Logic ---
             function applySidebarStateFromStorage() {
-
                 if (localStorage.getItem('sidebarState') === 'collapsed') {
                     body.classList.add('sidebar-collapsed');
                 } else {
@@ -64,15 +81,30 @@
             if (sidebarToggleBtn) {
                 sidebarToggleBtn.addEventListener('click', function() {
                     body.classList.toggle('sidebar-collapsed');
-                    if (body.classList.contains('sidebar-collapsed')) {
-                        localStorage.setItem('sidebarState', 'collapsed');
-                    } else {
-                        localStorage.setItem('sidebarState', 'expanded');
-                    }
+                    localStorage.setItem('sidebarState', body.classList.contains('sidebar-collapsed') ? 'collapsed' : 'expanded');
                 });
             }
-
             applySidebarStateFromStorage();
+
+            function applyDarkModeStateFromStorage() {
+                if (localStorage.getItem('theme') === 'dark') {
+                    body.classList.add('dark-mode');
+                    if(darkModeToggleBtn) darkModeToggleBtn.textContent = 'Toggle Light Mode';
+                } else {
+                    body.classList.remove('dark-mode');
+                    if(darkModeToggleBtn) darkModeToggleBtn.textContent = 'Toggle Dark Mode';
+                }
+            }
+
+            if (darkModeToggleBtn) {
+                darkModeToggleBtn.addEventListener('click', function() {
+                    body.classList.toggle('dark-mode');
+                    const isDarkMode = body.classList.contains('dark-mode');
+                    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                    darkModeToggleBtn.textContent = isDarkMode ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+                });
+            }
+            applyDarkModeStateFromStorage();
         });
     </script>
 </body>

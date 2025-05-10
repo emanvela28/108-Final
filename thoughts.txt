@@ -2,7 +2,6 @@
 • Users can filter questions on topics
 • Users can answer questions (implemented)
 • Users can upvote and downvote answers (implemented) 
-• Pick a theme for your forum
 * Users should be able to upload an image if they would like. (implemented)
 * Users can filter by tags on a topic page (implemented)
 * Users should be able to select a tag for their topic when making a new post. (implemented)
@@ -11,3 +10,26 @@
 * user should be able to follow another user. (implemented)
 * User should be able to click on their own page and view their data (implemented)
 * User should be able to select a profile photo (implemented)
+* Notification page if someone comments or likes (implemented)
+* Deploy site (implemented)
+
+* Add a method to create / delete forum topics
+* Theme --> student dorm/house themed? Share room designs, ask for help/opinions, etc.
+  ---> Site name needs to be chosen
+  ---> ISSUE: Dark mode causes page flash on reload or changing pages
+
+/// Potential features ///
+* Admin side to remove other people's comments/posts when necessary
+* Add a button to share as link for posts?
+* Add option to sort homepage posts by most recent or most popular
+  ---> Adjust title accordingly
+* Paginate / tab bar for posts in topic sections (home page can be infinite like Instagram)
+* Edit posts
+* Search for posts / users
+* Tagging users in posts or comments
+
+
+// BUGS
+* When liking your own post the server crashes
+* Dark mode flashes white when switching a screen
+  * Text is kind of hard to see on dark mode (submit boxes and notifications specifically) 

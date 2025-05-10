@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: 108-final-web
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn run:app
+    plan: free
