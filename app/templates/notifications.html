@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<h1>Your Notifications</h1>
+
+{% if notifications %}
+    <ul class="notification-list">
+        {% for note in notifications %}
+            <li class="notification-item {% if note.id in unread_ids %}unread-temp{% else %}read{% endif %}">
+                <div class="notification-message">
+                    {% if note.post_id %}
+                        <a href="{{ url_for('main.view_post', post_id=note.post_id) }}">{{ note.message }}</a>
+                    {% else %}
+                        {{ note.message }}
+                    {% endif %}
+                </div>
+                <div class="notification-timestamp">{{ note.timestamp.strftime('%b %d, %Y %I:%M %p') }}</div>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% else %}
+    <p class="text-center text-muted">You have no notifications.</p>
+{% endif %}
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tempItems = document.querySelectorAll('.notification-item.unread-temp');
+    });
+</script>
