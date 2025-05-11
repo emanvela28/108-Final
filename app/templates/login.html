@@ -3,6 +3,9 @@
 {% block title %}Login | Login {% endblock %}
 
 {% block content %}
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="../static/assets/Bobcat board text logo.png" alt="Bobcat Board" style="max-width: 350px;">
+</div>
 <div class="login-box">
     <h2>Login</h2>
     <form method="POST" action="{{ url_for('main.login') }}">
@@ -16,6 +19,9 @@
             {{ form.password(class="form-control", size=32) }}
         </div>
         {{ form.submit(class="btn btn-primary btn-block") }}
+        <small class="text-muted">
+            <a href="{{ url_for('main.register') }} " class="{{ 'active' if request.endpoint == 'main.register' else '' }}">Don't have an account yet?</a>
+        </small>
     </form>
     </div>
 {% endblock %}

@@ -6,6 +6,7 @@
     <title>{% block title %}Forum{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.png">
 </head>
 <body>
 
@@ -29,7 +30,10 @@
         <div class="sidebar-header">
 
             {#NEED TO PICK A NAME#}
-            <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand">Forum</a>
+            <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand" style="display: flex; justify-content: center; align-items: center;">
+                <img src="../static/assets/Bobcat board logo Small.png" alt="Bobcat Board" style="max-width: 100px; height: auto;">
+            </a>
+            
             {#NEED TO PICK A NAME#}
         </div>
         <ul class="sidebar-nav">
