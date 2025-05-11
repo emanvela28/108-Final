@@ -77,6 +77,11 @@
                     </div>
                 </article>
             {% endfor %}
+            <div>
+                <a href="{{ url_for('main.topics_index') }}">
+                    <button type="button" class="footer-button">+</button>
+                  </a>
+            </div>
         </div>
     {% else %}
         <div class="flash info"> {# Using flash styling for this message #}

@@ -920,3 +920,26 @@ body.dark-mode .profile-pic-default {
     transform: translateY(-1px);
     box-shadow: var(--shadow-soft);
 }
+
+.footer-button {
+    background-color: var(--accent-primary);
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 250%;
+    border-radius: 100%;
+    margin: 2px 2px;
+    cursor: pointer;
+    position: fixed;
+    bottom: 2vw;
+    right: 2vw;
+    width: 75px;
+    height: 75px;
+    z-index: 99999;
+  }
+  .footer-button:hover {
+    background-color: var(--accent-primary-darker);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+}
