@@ -19,7 +19,11 @@
         <div class="post-content-full mb-1" style="font-size: 1.1rem;">
         {{ post.content | safe }}
     </div>
-
+    {% if post.media_url %}
+        <div>
+            <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Image for {{post.title}}" style="max-width: 80%;">
+        </div>
+    {% endif %}
     <p class="post-meta mb-1 text-muted">
         Posted by 
         <a href="{{ url_for('main.user_profile', username=post.author.username) }}" class="link-highlight">{{ post.author.username }}</a>
