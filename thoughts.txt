@@ -16,6 +16,7 @@
 * Edit / Delete posts (implemented)
 * When a user replies to another user, their reply should populate under the parent reply (Implemented)
 * Show user pfps on replies and posts (implemented)
+* Add option to sort homepage posts by most recent or most popular (implemented)
 
 
 * Paginate / tab bar for posts in topic sections (home page can be infinite like Instagram)
@@ -25,7 +26,6 @@
 
 /// Potential features ///
 * Admin side to remove other people's comments/posts when necessary
-* Add option to sort homepage posts by most recent or most popular
   ---> Adjust title accordingly
 * Search for posts / users
 * Tagging users in posts or comments
