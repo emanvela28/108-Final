@@ -41,6 +41,34 @@
             <form action="{{ url_for('main.vote_post', post_id=post.id, vote_type='downvote') }}" method="post" class="vote-form-inline">
                 <button type="submit" aria-label="Downvote Post">👎</button>
             </form>
+            <span class="share-link" style="cursor: pointer; color: #689f38; transition: opacity 0.3s ease-in-out;"
+                data-post-url="{{request.scheme }}://{{ request.host }}{{ url_for('main.view_post', post_id=post.id, origin='feed') }}"
+                onclick="copyToClipboard(this)">
+                Share
+            </span>
+            <script>
+                function copyToClipboard(element) {
+                    const url = element.getAttribute('data-post-url');
+
+                    function updateTextWithFade(newText) {
+                        element.style.opacity = '0.5'; 
+                        setTimeout(() => {
+                            element.textContent = newText;
+                            element.style.opacity = '1';
+                         }, 200); 
+                    }
+                    navigator.clipboard.writeText(url)
+                        .then(() => {
+                            updateTextWithFade('Post Copied to Clipboard!');
+                            setTimeout(() => {
+                            updateTextWithFade('Share');
+                            }, 3000);
+                        })
+                        .catch(err => {
+                            console.error('Failed to copy: ', err);
+                        });
+                }
+                </script>
         </div>
     {% else %}
         <p><a href="{{ url_for('main.login') }}">Log in to vote</a></p>

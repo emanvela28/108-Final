@@ -37,11 +37,40 @@
                             </div>
                             <a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}#replies" class="view-replies-link">{{ post.replies.count() }} Replies</a>
                         </div>
-                         {% if post.tag %}
-                            <div class="mt-1">
+                        <div class="mt-1" style="display: flex; align-items: center; justify-content: space-between;">
+                            {% if post.tag %}
                                 <span class="post-tag-badge">{{ post.tag }}</span>
-                            </div>
-                        {% endif %}
+                            {% else %}
+                                <span></span> {% endif %}
+                            <span class="share-link" style="cursor: pointer; color: #689f38; transition: opacity 0.3s ease-in-out;"
+                                  data-post-url="{{request.scheme }}://{{ request.host }}{{ url_for('main.view_post', post_id=post.id, origin='feed') }}"
+                                  onclick="copyToClipboard(this)">
+                                Share
+                            </span>
+                        </div>
+                        <script>
+                            function copyToClipboard(element) {
+                                const url = element.getAttribute('data-post-url');
+
+                                function updateTextWithFade(newText) {
+                                    element.style.opacity = '0.5'; 
+                                    setTimeout(() => {
+                                        element.textContent = newText;
+                                        element.style.opacity = '1';
+                                     }, 200); 
+                                }
+                                navigator.clipboard.writeText(url)
+                                    .then(() => {
+                                        updateTextWithFade('Copied!');
+                                        setTimeout(() => {
+                                        updateTextWithFade('Share');
+                                        }, 3000);
+                                    })
+                                    .catch(err => {
+                                        console.error('Failed to copy: ', err);
+                                    });
+                            }
+                            </script>
                     </div>
                 </article>
             {% endfor %}
