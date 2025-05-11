@@ -1,0 +1,24 @@
+<div class="reply-container" id="reply-{{ _reply.id }}" style="margin-left: {{ _depth * 15 }}px;">
+  <div class="d-flex align-items-start mb-1">
+    {% if _reply.author.profile_picture %}
+      <img src="{{ url_for('static', filename='uploads/' ~ _reply.author.profile_picture) }}" class="reply-avatar me-2" alt="{{ _reply.author.username }}">
+    {% else %}
+      <div class="reply-avatar-fallback me-2">{{ _reply.author.username[0]|upper }}</div>
+    {% endif %}
+    <div>
+      <div class="reply-author-meta text-success">
+        <a href="{{ url_for('main.user_profile', username=_reply.author.username) }}">{{ _reply.author.username }}</a>
+        <small class="text-muted">on {{ _reply.timestamp.strftime('%b %d, %Y %H:%M') }}</small>
+      </div>
+      <div class="reply-content">{{ _reply.content | safe }}</div>
+      <a href="{{ url_for('main.create_reply', post_id=_reply.post.id) }}?parent={{ _reply.id }}" class="reply-to-reply-link text-muted small">Reply</a>
+    </div>
+  </div>
+
+  {% for child in _reply.children.order_by(Reply.timestamp.asc()) %}
+    {% set _reply = child %}
+    {% set _depth = _depth + 1 %}
+    {% include 'reply.html' %}
+    {% set _depth = _depth - 1 %}
+  {% endfor %}
+</div>

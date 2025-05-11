@@ -12,24 +12,27 @@
 * User should be able to select a profile photo (implemented)
 * Notification page if someone comments or likes (implemented)
 * Deploy site (implemented)
+* Add a button to share as link for posts? (implemented)
+* Edit / Delete posts (implemented)
+* When a user replies to another user, their reply should populate under the parent reply (Implemented)
+* Show user pfps on replies and posts (implemented)
 
+
+* Paginate / tab bar for posts in topic sections (home page can be infinite like Instagram)
 * Add a method to create / delete forum topics
 * Theme --> student dorm/house themed? Share room designs, ask for help/opinions, etc.
-  ---> Site name needs to be chosen
-  ---> ISSUE: Dark mode causes page flash on reload or changing pages
+  ---> Site name needs to be chosen (implemented)
 
 /// Potential features ///
 * Admin side to remove other people's comments/posts when necessary
-* Add a button to share as link for posts? (implemented)
 * Add option to sort homepage posts by most recent or most popular
   ---> Adjust title accordingly
-* Paginate / tab bar for posts in topic sections (home page can be infinite like Instagram)
-* Edit posts
 * Search for posts / users
 * Tagging users in posts or comments
+* Add error messages when trying to submit an empty post, every field needs to be filled
 
 
 // BUGS
-* When liking your own post the server crashes
+* When liking your own post the server crashes (fixed)
 * Dark mode flashes white when switching a screen
   * Text is kind of hard to see on dark mode (submit boxes and notifications specifically) 

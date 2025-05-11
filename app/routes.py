@@ -133,11 +133,19 @@ def toggle_follow(username):
 
 
 # ------------------------------ FORUM (FEED & TOPICS) ------------------------------
-@main.route('/home')  # This is the main feed page
+@main.route('/home')
 @login_required
 def home_page():
-    all_posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('feed.html', posts=all_posts, title="Latest Posts")
+    sort = request.args.get('sort', 'recent')
+    if sort == 'popular':
+        all_posts = Post.query.outerjoin(Post.votes).group_by(Post.id).order_by(db.func.count(Vote.id).desc()).all()
+        page_title = "Most Popular Posts"
+    else:
+        all_posts = Post.query.order_by(Post.timestamp.desc()).all()
+        page_title = "Latest Posts"
+    
+    return render_template('feed.html', posts=all_posts, title=page_title, current_sort=sort)
+
 
 
 @main.route('/topics')
@@ -173,14 +181,12 @@ def view_topic(slug):
         all_tags=all_tags
     )
 
-
 @main.route('/post/<int:post_id>')
-@login_required
 def view_post(post_id):
     post = Post.query.get_or_404(post_id)
-    origin = request.args.get('origin', None)
+    origin = request.args.get('origin', 'topic')
     page_title = post.title
-    return render_template('post.html', post=post, title=page_title, origin=origin)
+    return render_template('post.html', post=post, title=page_title, origin=origin, Reply=Reply)
 
 
 @main.route('/topic/<slug>/new', methods=['GET', 'POST'])
@@ -233,25 +239,101 @@ def create_post(slug):
 def create_reply(post_id):
     post = Post.query.get_or_404(post_id)
     form = ReplyForm()
+    parent_reply = None
+
+    parent_id = request.args.get('parent')
+    if parent_id:
+        parent_reply = Reply.query.get(parent_id)
+
     if form.validate_on_submit():
-        reply = Reply(content=form.content.data, author=current_user, post=post)
+        reply = Reply(
+            content=form.content.data,
+            author=current_user,
+            post=post,
+            parent_reply_id=parent_id
+        )
         db.session.add(reply)
 
-        # ✅ Add this notification logic
         if post.author != current_user:
-            from app.models import Notification  # make sure this import is valid
             notification = Notification(
                 user_id=post.author.id,
-                message=f"{current_user.username} replied to your post: '{post.title}'",
-                is_read=False
+                message=f"{current_user.username} replied to your post: '{post.title}'"
+            )
+            db.session.add(notification)
+
+        if parent_reply and parent_reply.author != current_user:
+            notification = Notification(
+                user_id=parent_reply.author.id,
+                message=f"{current_user.username} replied to your comment on '{post.title}'"
             )
             db.session.add(notification)
 
         db.session.commit()
         flash('Reply posted!', 'success')
         return redirect(url_for('main.view_post', post_id=post.id, _anchor='reply-' + str(reply.id)))
-    
-    return render_template('create_reply.html', title=f"Reply to '{post.title}'", form=form, post=post)
+
+    return render_template(
+        'create_reply.html',
+        title=f"Reply to '{post.title}'",
+        form=form,
+        post=post,
+        parent_reply=parent_reply
+    )
+
+
+@main.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        flash("You can only edit your own posts.", "danger")
+        return redirect(url_for('main.view_post', post_id=post.id))
+
+    form = PostForm()
+
+    # Dynamically populate tag choices based on topic slug
+    TAG_OPTIONS = {
+        "cozy-cribs-decor-inspiration": ["Suggestions", "Room Tours", "Aesthetic", "DIY", "Help"],
+        "functional-fixes-organization-hacks": ["Tips", "Tools", "Storage", "Tech", "Suggestions"],
+        "roommate-realities-advice-support": ["Advice", "Issues", "Good Roommates", "Bad Roommates", "Help"],
+        "swap-shop-secondhand-treasures": ["Buy", "Sell", "Swap", "Furniture", "Textbooks"],
+        "student-life-local-hotspots": ["Food", "Events", "Housing", "Things to Do", "Advice"]
+    }
+
+    topic_slug = post.topic.slug
+    tag_choices = TAG_OPTIONS.get(topic_slug, ["General"])
+    form.tag.choices = [(tag, tag) for tag in tag_choices]
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        post.tag = form.tag.data
+        post.edited = True
+        db.session.commit()
+        flash("Post updated successfully.", "success")
+        return redirect(url_for('main.view_post', post_id=post.id))
+
+    # Pre-fill form fields for GET request
+    form.title.data = post.title
+    form.content.data = post.content
+    form.tag.data = post.tag
+
+    return render_template('edit_post.html', form=form, post=post, title="Edit Post")
+
+
+@main.route('/post/<int:post_id>/delete', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        flash("You can only delete your own posts.", "danger")
+        return redirect(url_for('main.view_post', post_id=post.id))
+
+    db.session.delete(post)
+    db.session.commit()
+    flash("Post deleted successfully.", "info")
+    return redirect(url_for('main.home_page'))
+
 
 # ------------------------------ VOTING ------------------------------
 @main.route('/vote/post/<int:post_id>/<vote_type>', methods=['POST'])
@@ -265,26 +347,29 @@ def vote_post(post_id, vote_type):
     existing_vote = Vote.query.filter_by(user_id=current_user.id, post_id=post.id).first()
 
     if existing_vote:
-        if existing_vote.vote_type == vote_type:  # Clicking the same vote again (e.g. upvote then upvote again)
+        if existing_vote.vote_type == vote_type:
             db.session.delete(existing_vote)
             flash(f'Your {vote_type} was removed.', 'info')
-        else:  # Switching vote (e.g. from downvote to upvote)
+        else:
             existing_vote.vote_type = vote_type
-            flash(f'Your vote was changed to an {vote_type}.', 'success')
-    else:  # New vote
+            flash(f'Your vote was changed to a {vote_type}.', 'success')
+    else:
         new_vote = Vote(user_id=current_user.id, post_id=post.id, vote_type=vote_type)
         db.session.add(new_vote)
+
+        # Only create a notification if the user is not voting on their own post
         if vote_type == 'upvote' and post.author and post.author != current_user:
             notification = Notification(
-            user_id=post.author.id,
-            message=f"{current_user.username} upvoted your post: '{post.title}'"
-        )
-        db.session.add(notification)
+                user_id=post.author.id,
+                message=f"{current_user.username} upvoted your post: '{post.title}'"
+            )
+            db.session.add(notification)
 
         flash(f'You {vote_type}d the post.', 'success')
 
     db.session.commit()
     return redirect(request.referrer or url_for('main.view_post', post_id=post.id))
+
 
 
 @main.route('/vote/reply/<int:reply_id>/<vote_type>', methods=['POST'])

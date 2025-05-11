@@ -8,12 +8,31 @@
 <div class="content-card mb-2">
     <div class="card-content">
         <h3><a href="{{ url_for('main.view_post', post_id=post.id) }}">{{ post.title }}</a></h3>
-        <div class="post-meta">
-            Posted by {{ post.author.username }} • {{ post.timestamp.strftime('%b %d, %Y at %I:%M %p') }}
+
+        {% if post.tag %}
+        <p class="mb-1"><strong>Tag:</strong> <span class="post-detail-tag-display">{{ post.tag }}</span></p>
+        {% endif %}
+
+        <div class="post-content-full mb-1" style="font-size: 1.1rem;">
+            {{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}
         </div>
-        <p class="post-content-snippet">{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+
+        <p class="post-meta text-muted">
+            Posted by 
+            <a href="{{ url_for('main.user_profile', username=post.author.username) }}" class="link-highlight">{{ post.author.username }}</a>
+            on {{ post.timestamp.strftime('%b %d, %Y at %I:%M %p') }}
+        </p>
     </div>
 </div>
+
+
+
+<!-- Replying to another reply -->
+{% if parent_reply %}
+  <div class="alert alert-info small mb-3">
+    Replying to <strong>{{ parent_reply.author.username }}</strong>: "{{ parent_reply.content[:80] }}..."
+  </div>
+{% endif %}
 
 <!-- Reply Form -->
 <form method="post" class="reply-form">
@@ -32,5 +51,4 @@
 <a href="{{ request.referrer or url_for('main.view_post', post_id=post.id) }}" class="btn btn-secondary mb-1">
     ← Back to Post
 </a>
-
 {% endblock %}

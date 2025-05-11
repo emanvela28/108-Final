@@ -31,7 +31,7 @@
 
             {#NEED TO PICK A NAME#}
             <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand" style="display: flex; justify-content: center; align-items: center;">
-                <img src="../static/assets/Bobcat board logo Small.png" alt="Bobcat Board" style="max-width: 100px; height: auto;">
+                <img src="{{ url_for('static', filename='assets/Bobcat board logo Small.png') }}" alt="Bobcat Board" style="max-width: 100px; height: auto;">
             </a>
             
             {#NEED TO PICK A NAME#}

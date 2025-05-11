@@ -943,3 +943,131 @@ body.dark-mode .profile-pic-default {
     transform: translateY(-1px);
     box-shadow: var(--shadow-soft);
 }
+
+
+.profile-content-list-item {
+  padding: 1rem 1.25rem; /* tighter padding */
+  font-size: 1rem;       /* larger font for better readability */
+  line-height: 1.5;
+  background-color: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+}
+
+.profile-content-list-item:hover {
+  background-color: #fefcf9;
+  box-shadow: var(--shadow-medium);
+}
+
+.reply-author-meta {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.reply-content {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.reply-avatar {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+}
+
+.reply-avatar {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+}
+
+.reply-avatar-fallback {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: var(--accent-muted);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+}
+
+.reply-box {
+  border-left: 2px solid #ccc;
+  padding-left: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.reply-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.reply-avatar-fallback {
+  width: 36px;
+  height: 36px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.reply-thread {
+  margin-top: 1rem;
+}
+
+.reply-container {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 2px solid #ccc;
+}
+
+.reply-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.reply-author-meta {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.reply-content {
+  margin-bottom: 0.25rem;
+}
+
+.reply-indent {
+  margin-left: 20px;
+}
+
+/* General clickable link styling */
+a.link-highlight {
+  color: #689f38;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a.link-highlight:hover {
+  text-decoration: underline;
+  color: #4e7d2d;
+}
+

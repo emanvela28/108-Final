@@ -8,6 +8,16 @@
     <h1 class="mb-2">{{ title }}</h1>
 
     {% if posts %}
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+        <form method="get" action="{{ url_for('main.home_page') }}" style="display: flex; align-items: center; gap: 0.75rem;">
+            <label for="sort" class="text-muted" style="white-space: nowrap; margin-bottom: 0;">Sort by:</label>
+            <select name="sort" id="sort" onchange="this.form.submit()" class="form-select-sm">
+                <option value="recent" {% if current_sort == 'recent' %}selected{% endif %}>Most Recent</option>
+                <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+            </select>
+        </form>
+    </div>
+
         <div class="feed-grid">
             {% for post in posts %}
                 <article class="content-card">

@@ -66,6 +66,7 @@ class Post(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    edited = db.Column(db.Boolean, default=False) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'), nullable=False)
     media_url = db.Column(db.String(255), nullable=True)
@@ -108,9 +109,17 @@ class Reply(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     media_url = db.Column(db.String(255), nullable=True)
 
+    parent_reply_id = db.Column(db.Integer, db.ForeignKey('reply.id'), nullable=True)
+
     author = db.relationship('User', back_populates='replies')
     post = db.relationship('Post', back_populates='replies')
     votes = db.relationship('Vote', back_populates='reply', lazy='dynamic', cascade='all, delete-orphan')
+
+    children = db.relationship(
+        'Reply',
+        backref=db.backref('parent', remote_side=[id]),
+        lazy='dynamic'
+    )
 
     @property
     def upvotes_count(self):
@@ -163,3 +172,4 @@ class Notification(db.Model):
 
     def __repr__(self):
         return f"<Notification to User {self.user_id}: {self.message}>"
+    
