@@ -1,5 +1,6 @@
 :root {
     --font-primary: 'Inter', sans-serif;
+    --card-hover-bg: #fefcf9;
 
     /* Light Theme */
     --background-main-light: #FAF7F2;
@@ -21,11 +22,14 @@
     --vote-score-bubble-bg-light: #E9E4DD;
     --vote-score-bubble-hover-bg-light: #DCD3C9;
     --default-pfp-bg-light: var(--accent-primary-light);
+    --button-text-dark-on-green: #1a1a1a;
+    --notification-bg: #ffffff;
 
     /* Dark Theme  */
     --background-main-dark: #2A231F;
     --background-card-dark: #3D352F;
     --sidebar-bg-dark: #302823;
+    --sidebar-active-bg: #3a332d;
     --text-primary-dark: #E8E0D8;
     --text-secondary-dark: #B0A093;
     --border-color-dark: #5D4037;
@@ -42,6 +46,7 @@
     --vote-score-bubble-bg-dark: #5D4037;
     --vote-score-bubble-hover-bg-dark: #705B51;
     --default-pfp-bg-dark: var(--accent-primary-dark);
+
 
 
     /* Default to Light Theme Variables */
@@ -72,7 +77,7 @@
     --border-radius-large: 12px;
 }
 
-body.dark-mode {
+html.dark-mode {
     --background-main: var(--background-main-dark);
     --background-card: var(--background-card-dark);
     --sidebar-bg: var(--sidebar-bg-dark);
@@ -92,7 +97,12 @@ body.dark-mode {
     --vote-score-bubble-bg: var(--vote-score-bubble-bg-dark);
     --vote-score-bubble-hover-bg: var(--vote-score-bubble-hover-bg-dark);
     --default-pfp-bg: var(--default-pfp-bg-dark);
+    --button-text-dark-on-green: #1a1a1a; 
+    --card-hover-bg: #4A3F3A;
+    --notification-bg: #3D352F;
+
 }
+
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -230,8 +240,9 @@ body.dark-mode .sidebar-nav li a:hover {
     font-weight: 600;
     border-left-color: var(--accent-primary);
 }
-body.dark-mode .sidebar-nav li a.active {
-    background-color: rgba(255,255,255,0.08);
+
+html.dark-mode .sidebar-nav li a.active {
+  background-color: var(--sidebar-active-bg);
 }
 
 .sidebar-footer {
@@ -344,8 +355,9 @@ hr {
     background-color: var(--accent-primary);
     color: white;
 }
-body.dark-mode .btn-primary {
-    color: var(--text-primary-dark);
+html.dark-mode .btn-primary {
+    background-color: var(--accent-primary);
+    color: var(--button-text-dark-on-green);
 }
 .btn-primary:hover {
     background-color: var(--accent-primary-darker);
@@ -353,7 +365,7 @@ body.dark-mode .btn-primary {
     transform: translateY(-1px);
     box-shadow: var(--shadow-soft);
 }
-body.dark-mode .btn-primary:hover {
+html.dark-mode .btn-primary:hover {
     color: var(--text-primary-dark);
 }
 
@@ -416,10 +428,15 @@ body.dark-mode .button-link-topic {
     display: flex;
     flex-direction: column;
 }
+
 .content-card:hover {
+    background-color: var(--card-hover-bg);
     box-shadow: var(--shadow-medium);
     transform: translateY(-3px);
+    transition: background-color 0.3s ease, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
 }
+
 
 .card-image-link {
     display: block;
@@ -958,7 +975,7 @@ body.dark-mode .profile-pic-default {
 }
 
 .profile-content-list-item:hover {
-  background-color: #fefcf9;
+  background-color: var(--card-hover-bg);
   box-shadow: var(--shadow-medium);
 }
 
@@ -1071,3 +1088,84 @@ a.link-highlight:hover {
   color: #4e7d2d;
 }
 
+.footer-button {
+    background-color: var(--accent-primary-light);
+    color: white;
+    font-size: 1.5rem;
+    padding: 10px 18px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+/* Fix for dark mode */
+html.dark-mode .footer-button {
+    background-color: var(--accent-primary-dark);  /* your brighter green */
+    color: var(--button-text-dark-on-green);       /* now high-contrast dark text */
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.notification-item {
+  background-color: var(--notification-bg);
+  color: var(--text-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.notification-item.read {
+  opacity: 0.7;
+}
+
+.notification-item.unread-temp {
+  font-weight: 600;
+  border-left: 4px solid var(--accent-primary);
+}
+
+.notification-message a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.notification-message a:hover {
+  text-decoration: underline;
+}
+
+.notification-timestamp {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.notification-message a {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.notification-message a:hover {
+  color: var(--accent-primary);
+}
+
+html.dark-mode .notification-item {
+    color: var(--text-primary-dark);
+    background-color: var(--notification-bg); /* Already set */
+}
+
+html.dark-mode .notification-message a {
+    color: var(--text-primary-dark); /* Strong readable text */
+}
+
+html.dark-mode .notification-message a:hover {
+    color: var(--accent-primary-dark);
+}
+
+html.dark-mode .notification-timestamp {
+    color: var(--text-secondary-dark);
+}

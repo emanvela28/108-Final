@@ -2,30 +2,41 @@
 {% block title %}{{ title }} - {{ super() }}{% endblock %}
 
 {% block content %}
+    <!-- Logo -->
     <div style="display: flex; justify-content: center; align-items: center;">
-        <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand" style="display: flex; justify-content: center; align-items: center;">
+        <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}"
+           class="sidebar-brand" style="display: flex; justify-content: center; align-items: center;">
             <img src="../static/assets/Bobcat board text logo.png" alt="Bobcat Board" style="max-width: 350px;">
         </a>
     </div>
 
+    <!-- Page title and search form -->
     <div style="display: flex; justify-content: space-between; margin-top: 40px; align-items: center;">
         <h1 class="mb-2">{{ title }}</h1>
-        <form action="{{ url_for('main.search_posts') }}" method="get" style="width: 363px; display: flex; align-items: baseline; gap: 6px; justify-content: flex-end;">
-            <input type="text" name="query" placeholder="Search posts..." value="{{ search_query | default('') }}" style="border-radius: 25;">
+        <form action="{{ url_for('main.search_posts') }}" method="get"
+              style="width: 363px; display: flex; align-items: baseline; gap: 6px; justify-content: flex-end;">
+            <input type="text" name="query" placeholder="Search posts..." value="{{ search_query | default('') }}"
+                   style="border-radius: 25px;">
+            <select name="search_type" class="form-select" style="border-radius: 25px; padding: 5px 10px;">
+                <option value="posts" {% if search_type == 'posts' %}selected{% endif %}>Posts</option>
+                <option value="users" {% if search_type == 'users' %}selected{% endif %}>Users</option>
+                <option value="all" {% if search_type == 'all' %}selected{% endif %}>All</option>
+            </select>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
 
+    <!-- Posts feed -->
     <div class="feed-grid">
         {% if posts %}
             {% for post in posts %}
             <article class="content-card">
                 {% if post.media_url %}
                     <a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}" class="card-image-link">
-                        <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Image for {{post.title}}" class="card-image">
+                        <img src="{{ url_for('static', filename='uploads/' ~ post.media_url) }}" alt="Image for {{ post.title }}" class="card-image">
                     </a>
                 {% else %}
-                     <div class="card-no-image"></div>
+                    <div class="card-no-image"></div>
                 {% endif %}
                 <div class="card-content">
                     <h3><a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}">{{ post.title }}</a></h3>
@@ -47,15 +58,17 @@
                                 <button type="submit" aria-label="Downvote">👎</button>
                             </form>
                         </div>
-                        <a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}#replies" class="view-replies-link">{{ post.replies.count() }} Replies</a>
+                        <a href="{{ url_for('main.view_post', post_id=post.id, origin='feed') }}#replies"
+                           class="view-replies-link">{{ post.replies.count() }} Replies</a>
                     </div>
                     <div class="mt-1" style="display: flex; align-items: center; justify-content: space-between;">
                         {% if post.tag %}
                             <span class="post-tag-badge">{{ post.tag }}</span>
                         {% else %}
-                            <span></span> {% endif %}
+                            <span></span>
+                        {% endif %}
                         <span class="share-link" style="cursor: pointer; color: #689f38; transition: opacity 0.3s ease-in-out;"
-                              data-post-url="{{request.scheme }}://{{ request.host }}{{ url_for('main.view_post', post_id=post.id, origin='feed') }}"
+                              data-post-url="{{ request.scheme }}://{{ request.host }}{{ url_for('main.view_post', post_id=post.id, origin='feed') }}"
                               onclick="copyToClipboard(this)">
                             Share
                         </span>
@@ -65,36 +78,56 @@
                             const url = element.getAttribute('data-post-url');
 
                             function updateTextWithFade(newText) {
-                                element.style.opacity = '0.5'; 
+                                element.style.opacity = '0.5';
                                 setTimeout(() => {
                                     element.textContent = newText;
                                     element.style.opacity = '1';
-                                 }, 200); 
+                                }, 200);
                             }
+
                             navigator.clipboard.writeText(url)
                                 .then(() => {
                                     updateTextWithFade('Copied!');
                                     setTimeout(() => {
-                                    updateTextWithFade('Share');
+                                        updateTextWithFade('Share');
                                     }, 3000);
                                 })
                                 .catch(err => {
                                     console.error('Failed to copy: ', err);
                                 });
                         }
-                        </script>
+                    </script>
                 </div>
             </article>
-        {% endfor %}
-        <div class="post-content-full mb-1" style="text-align: center; font-size: 1.1em; max-width: 100%; box-sizing: border-box; justify-content: center;">
-            End of Search Results
-        </div>
-        {% else %} 
-        <div></div> {#I honestly, truly do not know why, but the below text will only stay centered if this div stays here #}
-        <div class="post-content-full mb-1" style="text-align: center; font-size: 1.1em; max-width: 100%; box-sizing: border-box; margin-top: 50px;">
-            No results 🫤 Maybe check your spelling?
-        </div>
-        
+            {% endfor %}
+            <div class="post-content-full mb-1" style="text-align: center; font-size: 1.1em; max-width: 100%; box-sizing: border-box; justify-content: center;">
+                End of Search Results
+            </div>
+        {% elif not users or search_type == 'posts' %}
+            <div></div> 
+            <div class="post-content-full mb-1" style="text-align: center; font-size: 1.1em; max-width: 100%; box-sizing: border-box; margin-top: 50px;">
+                No results 🫤 Maybe check your spelling?
+            </div>
         {% endif %}
     </div>
+
+    <!-- User results: must go OUTSIDE .feed-grid to be centered -->
+    {% if users %}
+    <div style="width: 100%; display: flex; justify-content: center; margin-top: 60px;">
+        <div style="max-width: 600px; width: 100%; text-align: center;">
+            <h3>Users matching "{{ search_query }}"</h3>
+            <div style="margin-top: 20px;">
+                {% for user in users %}
+                    <div style="margin-bottom: 10px;">
+                        <a href="{{ url_for('main.user_profile', username=user.username) }}"
+                           class="username-link"
+                           style="color: #4caf50; font-size: 1.2em; text-decoration: none;">
+                            @{{ user.username }}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

@@ -7,21 +7,34 @@
 <form method="post" enctype="multipart/form-data" class="post-create-form">
     {{ form.hidden_tag() }}
 
+    <!-- Tag -->
     <div class="form-group">
         {{ form.tag.label(class="form-label") }}
-        {{ form.tag(class="form-control") }}
+        {{ form.tag(class="form-control" + (" is-invalid" if form.tag.errors else "")) }}
+        {% for error in form.tag.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
     </div>
 
+    <!-- Title -->
     <div class="form-group">
         {{ form.title.label(class="form-label") }}
-        {{ form.title(class="form-control") }}
+        {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+        {% for error in form.title.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
     </div>
 
+    <!-- Content -->
     <div class="form-group">
         {{ form.content.label(class="form-label") }}
-        {{ form.content(class="form-control") }}
+        {{ form.content(class="form-control" + (" is-invalid" if form.content.errors else "")) }}
+        {% for error in form.content.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
     </div>
 
+    <!-- Image -->
     <div class="form-group">
         {{ form.image.label(class="form-label") }}
         <label for="postImageInput" class="custom-file-upload">
@@ -33,10 +46,12 @@
 
     <img id="preview" class="create-post-image-preview" alt="New post image preview" />
 
+    <!-- Submit -->
     <div class="form-group mt-1">
-        <button type="submit" class="btn btn-primary">Submit Post</button>
+        {{ form.submit(class="btn btn-primary") }}
     </div>
 </form>
+
 
 <script>
     function previewImage(input) {

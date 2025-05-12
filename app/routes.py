@@ -147,7 +147,6 @@ def home_page():
     return render_template('feed.html', posts=all_posts, title=page_title, current_sort=sort)
 
 
-
 @main.route('/topics')
 @login_required
 def topics_index():
@@ -158,16 +157,33 @@ def topics_index():
 @login_required
 def search_posts():
     query = request.args.get('query')
+    search_type = request.args.get('search_type', 'posts')  # default to posts
     page_title = "Search Results"
     searched_posts = []
+    matched_users = []
 
     if query:
-        searched_posts = Post.query.filter(
-            (Post.title.ilike(f'%{query}%')) | 
-            (Post.content.ilike(f'%{query}%')) 
-        ).order_by(Post.timestamp.desc()).all() 
+        if search_type in ('posts', 'all'):
+            searched_posts = Post.query.filter(
+                (Post.title.ilike(f'%{query}%')) |
+                (Post.content.ilike(f'%{query}%'))
+            ).order_by(Post.timestamp.desc()).all()
+
+        if search_type in ('users', 'all'):
+            matched_users = User.query.filter(
+                User.username.ilike(f'%{query}%')
+            ).all()
+
         page_title = f"Search results for '{query}'"
-    return render_template('search_results.html', posts=searched_posts, title=page_title, search_query=query)
+
+    return render_template(
+        'search_results.html',
+        posts=searched_posts,
+        users=matched_users,
+        title=page_title,
+        search_query=query,
+        search_type=search_type
+    )
 
 
 # ------------------------------ POSTS & REPLIES ------------------------------
