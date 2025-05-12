@@ -79,7 +79,7 @@ class UserAdmin(SecureModelView):
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'your_super_secret_key_here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/app.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../instance/app.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 
