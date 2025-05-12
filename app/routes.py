@@ -154,6 +154,21 @@ def topics_index():
     topics_list = Topic.query.order_by(Topic.name).all()
     return render_template('topics_index.html', topics=topics_list, title="Browse Topics")
 
+@main.route('/search')
+@login_required
+def search_posts():
+    query = request.args.get('query')
+    page_title = "Search Results"
+    searched_posts = []
+
+    if query:
+        searched_posts = Post.query.filter(
+            (Post.title.ilike(f'%{query}%')) | 
+            (Post.content.ilike(f'%{query}%')) 
+        ).order_by(Post.timestamp.desc()).all() 
+        page_title = f"Search results for '{query}'"
+    return render_template('search_results.html', posts=searched_posts, title=page_title, search_query=query)
+
 
 # ------------------------------ POSTS & REPLIES ------------------------------
 @main.route('/topic/<slug>')

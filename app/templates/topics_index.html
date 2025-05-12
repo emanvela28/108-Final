@@ -3,7 +3,9 @@
 
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center;">
-    <img src="../static/assets/Bobcat board text logo.png" alt="Bobcat Board" style="max-width: 350px;">
+    <a href="{{ url_for('main.home_page') if current_user.is_authenticated else url_for('main.login') }}" class="sidebar-brand" style="display: flex; justify-content: center; align-items: center;">
+        <img src="../static/assets/Bobcat board text logo.png" alt="Bobcat Board" style="max-width: 350px;">
+    </a>
 </div>
 <div class="container mt-4">
     <h1>{{ title }}</h1>
